@@ -48,6 +48,12 @@ namespace ShortcutsApp
         /// </summary>
         private SettingsService? _settingsService;
         
+        /// <summary>
+        /// Popup window that displays shortcuts when the global hotkey is activated.
+        /// This window appears as an overlay and allows users to quickly launch applications.
+        /// </summary>
+        private Views.PopupWindow? _popupWindow;
+        
         #endregion
 
         /// <summary>
@@ -111,10 +117,13 @@ namespace ShortcutsApp
             // 1. Initialize Settings Service (required by other services)
             InitializeSettingsService();
             
-            // 2. Initialize System Tray Service
+            // 2. Initialize Popup Window (requires settings service)
+            InitializePopupWindow();
+            
+            // 3. Initialize System Tray Service
             InitializeSystemTray();
             
-            // 3. Initialize Hotkey Service
+            // 4. Initialize Hotkey Service
             InitializeHotkeyService();
         }
         
@@ -135,6 +144,31 @@ namespace ShortcutsApp
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to initialize settings service: {ex.Message}");
                 throw; // Settings service is critical, so we can't continue without it
+            }
+        }
+        
+        /// <summary>
+        /// Initializes the popup window that displays shortcuts when the global hotkey is pressed.
+        /// This window shows all configured shortcuts in a grid layout for quick access.
+        /// </summary>
+        private void InitializePopupWindow()
+        {
+            try
+            {
+                // Create the popup window instance with the settings service
+                _popupWindow = new Views.PopupWindow(_settingsService!);
+                
+                // Add it to the services container for dependency injection
+                _services[typeof(Views.PopupWindow)] = _popupWindow;
+                
+                System.Diagnostics.Debug.WriteLine("Popup window initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors during popup window initialization
+                // The app can continue without popup functionality if needed
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize popup window: {ex.Message}");
+                _popupWindow = null;
             }
         }
         
@@ -314,9 +348,27 @@ namespace ShortcutsApp
         {
             System.Diagnostics.Debug.WriteLine("Global hotkey activated!");
             
-            // TODO: In the future, this will show the shortcuts popup window
-            // For now, we'll show the main settings window as a test
-            OnShowMainWindowRequested(sender, e);
+            // Show the shortcuts popup window
+            if (_popupWindow != null)
+            {
+                try
+                {
+                    _popupWindow.ShowPopup();
+                    System.Diagnostics.Debug.WriteLine("Popup window displayed successfully");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to show popup window: {ex.Message}");
+                    // Fallback to showing main window if popup fails
+                    OnShowMainWindowRequested(sender, e);
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Popup window not initialized, showing main window instead");
+                // Fallback to showing main window if popup is not available
+                OnShowMainWindowRequested(sender, e);
+            }
         }
         
         /// <summary>
