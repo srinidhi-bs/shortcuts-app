@@ -39,21 +39,21 @@
 - [x] Add comprehensive error handling and logging
 - [x] Support configurable modifier keys and key combinations
 
+### 6. Popup Launcher Window
+- [x] Create PopupWindow with borderless, always-on-top styling
+- [x] Implement popup positioning (center screen or cursor)
+- [x] Add smooth show/hide animations
+- [x] Configure popup opacity and backdrop effects
+
 ## In Progress 🔄
 
 ## Pending Tasks ⏳
 
-### 6. Enhanced Hotkey System
+### 7. Enhanced Hotkey System
 - [ ] Improve hotkey capture UI for better user experience
 - [ ] Add validation for hotkey conflicts
 - [ ] Implement visual feedback during hotkey selection
 - [ ] Add user-friendly hotkey conflict resolution
-
-### 7. Popup Launcher Window
-- [ ] Create PopupWindow with borderless, always-on-top styling
-- [ ] Implement popup positioning (center screen or cursor)
-- [ ] Add smooth show/hide animations
-- [ ] Configure popup opacity and backdrop effects
 
 ### 8. Icon Grid Layout
 - [ ] Design responsive grid layout for shortcuts
@@ -109,10 +109,11 @@
 ## Next Steps
 1. ✅ Complete system tray integration
 2. ✅ Implement global hotkey registration (HotkeyService)
-3. Create popup launcher window with keyboard navigation
+3. ✅ Create popup launcher window with keyboard navigation
 4. Implement icon extraction service
-5. Test end-to-end functionality
-6. Polish user experience and handle edge cases
+5. Connect popup window to global hotkey system
+6. Test end-to-end functionality
+7. Polish user experience and handle edge cases
 
 ## Git Workflow
 - Commit after each major task completion
