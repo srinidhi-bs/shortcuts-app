@@ -30,20 +30,24 @@
 - [x] Integrate SystemTrayService with App.xaml.cs
 - [x] Connect minimize to tray button functionality
 
+### 5. Global Hotkey Registration
+- [x] Create HotkeyService using Win32 APIs
+- [x] Register/unregister global hotkeys dynamically
+- [x] Handle hotkey activation events through custom window procedure
+- [x] Integrate HotkeyService with App.xaml.cs and service container
+- [x] Implement Win32 message handling in MainWindow for WM_HOTKEY
+- [x] Add comprehensive error handling and logging
+- [x] Support configurable modifier keys and key combinations
+
 ## In Progress 🔄
 
 ## Pending Tasks ⏳
 
-### 5. Enhanced Hotkey System
+### 6. Enhanced Hotkey System
 - [ ] Improve hotkey capture UI for better user experience
 - [ ] Add validation for hotkey conflicts
 - [ ] Implement visual feedback during hotkey selection
-
-### 6. Global Hotkey Registration
-- [ ] Create HotkeyService using Win32 APIs
-- [ ] Register/unregister global hotkeys dynamically
-- [ ] Handle hotkey activation events
-- [ ] Manage hotkey conflicts with system/other apps
+- [ ] Add user-friendly hotkey conflict resolution
 
 ### 7. Popup Launcher Window
 - [ ] Create PopupWindow with borderless, always-on-top styling
@@ -104,7 +108,7 @@
 
 ## Next Steps
 1. ✅ Complete system tray integration
-2. Implement global hotkey registration (HotkeyService)
+2. ✅ Implement global hotkey registration (HotkeyService)
 3. Create popup launcher window with keyboard navigation
 4. Implement icon extraction service
 5. Test end-to-end functionality

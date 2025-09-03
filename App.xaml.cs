@@ -36,6 +36,18 @@ namespace ShortcutsApp
         /// </summary>
         private SystemTrayService? _systemTrayService;
         
+        /// <summary>
+        /// Service responsible for global hotkey registration and handling.
+        /// Manages system-wide keyboard shortcuts that work even when the app is not in focus.
+        /// </summary>
+        private HotkeyService? _hotkeyService;
+        
+        /// <summary>
+        /// Service responsible for loading and saving application settings.
+        /// Handles persistent storage of user preferences and configuration.
+        /// </summary>
+        private SettingsService? _settingsService;
+        
         #endregion
 
         /// <summary>
@@ -77,19 +89,58 @@ namespace ShortcutsApp
             _mainWindow.SetWindowSize(800, 700);
             _mainWindow.CenterOnScreen();
             
-            // Initialize system tray functionality
-            InitializeSystemTray();
+            // Initialize application services
+            InitializeServices();
             
             // Show the main window
             _mainWindow.Activate();
         }
         
         /// <summary>
-        /// Initializes the system tray service and sets up event handlers.
-        /// This method creates the system tray icon and configures its behavior.
+        /// Initializes all application services and sets up event handlers.
+        /// This method creates and configures the settings service, system tray, and hotkey service.
         /// 
         /// Learning Note: Separating initialization logic into dedicated methods
         /// makes the code more organized and easier to understand and maintain.
+        /// Services are initialized in dependency order.
+        /// </summary>
+        private void InitializeServices()
+        {
+            // Initialize services in dependency order: Settings first, then other services
+            
+            // 1. Initialize Settings Service (required by other services)
+            InitializeSettingsService();
+            
+            // 2. Initialize System Tray Service
+            InitializeSystemTray();
+            
+            // 3. Initialize Hotkey Service
+            InitializeHotkeyService();
+        }
+        
+        /// <summary>
+        /// Initializes the settings service for loading and saving application configuration.
+        /// This service must be initialized first as other services depend on it.
+        /// </summary>
+        private void InitializeSettingsService()
+        {
+            try
+            {
+                _settingsService = new SettingsService();
+                _services[typeof(SettingsService)] = _settingsService;
+                
+                System.Diagnostics.Debug.WriteLine("Settings service initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize settings service: {ex.Message}");
+                throw; // Settings service is critical, so we can't continue without it
+            }
+        }
+        
+        /// <summary>
+        /// Initializes the system tray service and sets up event handlers.
+        /// This method creates the system tray icon and configures its behavior.
         /// </summary>
         private void InitializeSystemTray()
         {
@@ -107,19 +158,94 @@ namespace ShortcutsApp
                 // Set up event handlers for system tray interactions
                 _systemTrayService.ShowMainWindowRequested += OnShowMainWindowRequested;
                 _systemTrayService.ExitApplicationRequested += OnExitApplicationRequested;
+                
+                System.Diagnostics.Debug.WriteLine("System tray service initialized successfully");
             }
             catch (Exception ex)
             {
                 // Handle any errors during system tray initialization
                 // This prevents the entire application from crashing if system tray setup fails
-                
-                // In a production app, you might want to log this error
-                // For now, we'll just continue without system tray functionality
                 System.Diagnostics.Debug.WriteLine($"Failed to initialize system tray: {ex.Message}");
                 
                 // Clean up if partially initialized
                 _systemTrayService?.Dispose();
                 _systemTrayService = null;
+            }
+        }
+        
+        /// <summary>
+        /// Initializes the hotkey service and registers the global hotkey.
+        /// This method sets up global keyboard shortcut handling based on user settings.
+        /// </summary>
+        private void InitializeHotkeyService()
+        {
+            try
+            {
+                // Create the hotkey service instance
+                _hotkeyService = new HotkeyService();
+                
+                // Add it to the services container for dependency injection
+                _services[typeof(HotkeyService)] = _hotkeyService;
+                
+                // Initialize the service with the main window
+                _hotkeyService.Initialize(_mainWindow);
+                
+                // Set up event handlers for hotkey interactions
+                _hotkeyService.HotkeyActivated += OnHotkeyActivated;
+                _hotkeyService.HotkeyRegistrationFailed += OnHotkeyRegistrationFailed;
+                
+                // Register the global hotkey based on current settings
+                RegisterGlobalHotkey();
+                
+                System.Diagnostics.Debug.WriteLine("Hotkey service initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors during hotkey initialization
+                // The app can continue without hotkey functionality if needed
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize hotkey service: {ex.Message}");
+                
+                // Clean up if partially initialized
+                _hotkeyService?.Dispose();
+                _hotkeyService = null;
+            }
+        }
+        
+        /// <summary>
+        /// Registers the global hotkey based on current application settings.
+        /// This method loads the hotkey configuration and attempts to register it with Windows.
+        /// </summary>
+        private async void RegisterGlobalHotkey()
+        {
+            if (_hotkeyService == null || _settingsService == null)
+                return;
+                
+            try
+            {
+                // Load current settings to get hotkey configuration
+                var settings = await _settingsService.LoadSettingsAsync();
+                
+                // Register the hotkey if enabled
+                if (settings.HotKey.Enabled)
+                {
+                    bool success = _hotkeyService.RegisterHotkey(settings.HotKey);
+                    if (success)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Global hotkey registered: {string.Join("+", settings.HotKey.Modifiers)} + {settings.HotKey.Key}");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Failed to register global hotkey");
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Global hotkey is disabled in settings");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error registering global hotkey: {ex.Message}");
             }
         }
         
@@ -172,6 +298,47 @@ namespace ShortcutsApp
         
         #endregion
         
+        #region Hotkey Event Handlers
+        
+        /// <summary>
+        /// Handles the global hotkey activation event.
+        /// This is called when the user presses the registered hotkey combination.
+        /// Currently shows the main window, but will eventually show the shortcuts popup.
+        /// 
+        /// Learning Note: For now, we're showing the main window as a placeholder.
+        /// In the final implementation, this will show the shortcuts popup launcher.
+        /// </summary>
+        /// <param name="sender">The hotkey service that raised the event</param>
+        /// <param name="e">Event arguments (empty in this case)</param>
+        private void OnHotkeyActivated(object? sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Global hotkey activated!");
+            
+            // TODO: In the future, this will show the shortcuts popup window
+            // For now, we'll show the main settings window as a test
+            OnShowMainWindowRequested(sender, e);
+        }
+        
+        /// <summary>
+        /// Handles hotkey registration failure events.
+        /// This is called when the system cannot register the requested hotkey,
+        /// typically because another application is already using that key combination.
+        /// 
+        /// Learning Note: Hotkey conflicts are common, especially with popular
+        /// combinations like Ctrl+Space. Good UX handles this gracefully.
+        /// </summary>
+        /// <param name="sender">The hotkey service that raised the event</param>
+        /// <param name="errorMessage">Description of why registration failed</param>
+        private void OnHotkeyRegistrationFailed(object? sender, string errorMessage)
+        {
+            System.Diagnostics.Debug.WriteLine($"Hotkey registration failed: {errorMessage}");
+            
+            // TODO: In the future, we might want to show a user-friendly notification
+            // or suggest alternative hotkey combinations
+        }
+        
+        #endregion
+        
         #region Service Management
         
         /// <summary>
@@ -200,6 +367,16 @@ namespace ShortcutsApp
         {
             try
             {
+                // Dispose of the hotkey service first (to unregister hotkeys immediately)
+                if (_hotkeyService != null)
+                {
+                    _hotkeyService.HotkeyActivated -= OnHotkeyActivated;
+                    _hotkeyService.HotkeyRegistrationFailed -= OnHotkeyRegistrationFailed;
+                    _hotkeyService.Dispose();
+                    _hotkeyService = null;
+                    System.Diagnostics.Debug.WriteLine("Hotkey service cleaned up");
+                }
+                
                 // Dispose of the system tray service
                 if (_systemTrayService != null)
                 {
@@ -207,10 +384,13 @@ namespace ShortcutsApp
                     _systemTrayService.ExitApplicationRequested -= OnExitApplicationRequested;
                     _systemTrayService.Dispose();
                     _systemTrayService = null;
+                    System.Diagnostics.Debug.WriteLine("System tray service cleaned up");
                 }
                 
-                // Clean up other services as needed
-                // In the future, we might have other services that need disposal
+                // Settings service doesn't need special cleanup, but clear the reference
+                _settingsService = null;
+                
+                // Clean up any other services in the container
                 foreach (var service in _services.Values)
                 {
                     if (service is IDisposable disposable)
@@ -221,6 +401,7 @@ namespace ShortcutsApp
                 
                 // Clear the services container
                 _services.Clear();
+                System.Diagnostics.Debug.WriteLine("All services cleaned up successfully");
             }
             catch (Exception ex)
             {
@@ -250,8 +431,70 @@ namespace ShortcutsApp
         #endregion
     }
 
+    /// <summary>
+    /// Custom main window that handles Win32 messages for global hotkey functionality.
+    /// This class extends WindowEx to provide message handling capabilities needed
+    /// for processing system-wide hotkey activation messages.
+    /// 
+    /// Learning Note: WinUI 3 applications need to handle Win32 messages manually
+    /// for system integrations like global hotkeys that operate outside the normal
+    /// WinUI event system.
+    /// </summary>
     public class MainWindow : WindowEx
     {
+        #region Win32 API Declarations for Message Handling
+        
+        /// <summary>
+        /// Win32 constant for hotkey messages.
+        /// When a registered global hotkey is pressed, Windows sends this message.
+        /// </summary>
+        private const int WM_HOTKEY = 0x0312;
+        
+        /// <summary>
+        /// Win32 API function to set a window procedure (message handler).
+        /// This allows us to intercept and handle Windows messages.
+        /// </summary>
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        
+        /// <summary>
+        /// Win32 API function to call the default window procedure.
+        /// This handles messages we don't process ourselves.
+        /// </summary>
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        
+        /// <summary>
+        /// Constant for setting window procedure.
+        /// </summary>
+        private const int GWL_WNDPROC = -4;
+        
+        #endregion
+        
+        #region Private Fields
+        
+        /// <summary>
+        /// Reference to the original window procedure.
+        /// We need this to call the default handler for messages we don't process.
+        /// </summary>
+        private IntPtr _originalWndProc;
+        
+        /// <summary>
+        /// Our custom window procedure delegate.
+        /// This will be called for all Windows messages sent to this window.
+        /// </summary>
+        private readonly WndProcDelegate _wndProcDelegate;
+        
+        /// <summary>
+        /// Delegate type for window procedure functions.
+        /// </summary>
+        private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        
+        #endregion
+        
+        /// <summary>
+        /// Initializes the main window with custom message handling capabilities.
+        /// </summary>
         public MainWindow()
         {
             try
@@ -262,6 +505,95 @@ namespace ShortcutsApp
             {
                 // Fallback if Mica is not available
             }
+            
+            // Initialize the window procedure delegate
+            _wndProcDelegate = new WndProcDelegate(WndProc);
+            
+            // Set up message handling when the window is loaded
+            this.Activated += OnMainWindowActivated;
+        }
+        
+        /// <summary>
+        /// Event handler called when the window is activated (first shown).
+        /// This is where we set up the custom message handling.
+        /// </summary>
+        /// <param name="sender">The window being activated</param>
+        /// <param name="args">Activation arguments</param>
+        private void OnMainWindowActivated(object sender, WindowActivatedEventArgs args)
+        {
+            // Only set up message handling once
+            if (_originalWndProc == IntPtr.Zero)
+            {
+                SetupMessageHandling();
+            }
+        }
+        
+        /// <summary>
+        /// Sets up custom Windows message handling for this window.
+        /// This is necessary to receive WM_HOTKEY messages from the system.
+        /// 
+        /// Learning Note: This is a common pattern for integrating Win32 APIs
+        /// with modern UI frameworks that don't natively support all Windows messages.
+        /// </summary>
+        private void SetupMessageHandling()
+        {
+            try
+            {
+                // Get the window handle
+                IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                
+                // Set our custom window procedure and save the original
+                _originalWndProc = SetWindowLongPtr(hWnd, GWL_WNDPROC, 
+                    System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(_wndProcDelegate));
+                
+                System.Diagnostics.Debug.WriteLine("Custom message handling set up successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to set up message handling: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// Custom window procedure that handles Windows messages.
+        /// This method is called for every Windows message sent to our window.
+        /// 
+        /// Learning Note: Window procedures are the fundamental mechanism for
+        /// handling Windows messages. Every window has one, and they form the
+        /// basis of the Windows message system.
+        /// </summary>
+        /// <param name="hWnd">Handle to the window receiving the message</param>
+        /// <param name="msg">The message identifier</param>
+        /// <param name="wParam">First message parameter</param>
+        /// <param name="lParam">Second message parameter</param>
+        /// <returns>Result of message processing</returns>
+        private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            try
+            {
+                // Handle hotkey messages
+                if (msg == WM_HOTKEY)
+                {
+                    System.Diagnostics.Debug.WriteLine($"WM_HOTKEY message received: wParam={wParam}, lParam={lParam}");
+                    
+                    // Get the hotkey service from the app and forward the message
+                    var app = (App)Application.Current;
+                    var hotkeyService = app.GetService<HotkeyService>();
+                    
+                    if (hotkeyService != null)
+                    {
+                        hotkeyService.HandleHotkeyMessage(msg, wParam, lParam);
+                        return IntPtr.Zero; // Message handled
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in WndProc: {ex.Message}");
+            }
+            
+            // For all other messages, call the original window procedure
+            return CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
         }
     }
 }
