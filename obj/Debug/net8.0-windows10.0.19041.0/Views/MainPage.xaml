@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Page x:ConnectionId='1'
+    x:Class="ShortcutsApp.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ShortcutsApp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="24">
+            
+            <!-- Header -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Shortcuts App" FontSize="28" FontWeight="SemiBold" />
+                <TextBlock Text="Configure your keyboard shortcuts and launcher settings" 
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+            
+            <!-- Hotkey Section -->
+            <StackPanel Spacing="16">
+                <TextBlock Text="Hotkey" FontSize="20" FontWeight="Medium" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBox x:ConnectionId='16' x:Name="HotkeyTextBox" 
+                             PlaceholderText="Press keys to set hotkey"
+                             IsReadOnly="True"
+                                                             />
+                    <Button x:ConnectionId='17' Grid.Column="1" Content="Clear" 
+                                                      />
+                </Grid>
+                <CheckBox x:ConnectionId='15' x:Name="EnableHotkeyCheckBox" 
+                          Content="Enable global hotkey" 
+                          IsChecked="True" 
+                                                        
+                                                           />
+            </StackPanel>
+            
+            <!-- Shortcuts Section -->
+            <StackPanel Spacing="16">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBlock Text="Shortcuts" FontSize="20" FontWeight="Medium" 
+                              VerticalAlignment="Center" />
+                    <Button x:ConnectionId='14' Grid.Column="1" Content="Add Shortcut" 
+                                                     >
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                                <Setter Property="Padding" Value="16,8" />
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+                
+                <ListView x:ConnectionId='10' x:Name="ShortcutsListView" 
+                          SelectionMode="None"
+                                                          >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Image Grid.Column="0" 
+                                       Width="32" Height="32"
+                                       Source="{Binding IconPath}"
+                                       Stretch="Uniform" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Medium" />
+                                    <TextBlock Text="{Binding Path}" 
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <Button x:ConnectionId='13' Grid.Column="2" 
+                                        Content="Remove"
+                                                                    
+                                        CommandParameter="{Binding Id}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                <TextBlock x:ConnectionId='11' x:Name="EmptyShortcutsText" 
+                          Text="No shortcuts configured. Click 'Add Shortcut' to get started."
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          HorizontalAlignment="Center"
+                          Visibility="Collapsed" />
+            </StackPanel>
+            
+            <!-- Appearance Section -->
+            <StackPanel Spacing="16">
+                <TextBlock Text="Appearance" FontSize="20" FontWeight="Medium" />
+                
+                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+                    
+                    <!-- Grid Columns -->
+                    <StackPanel Grid.Row="0" Spacing="8">
+                        <TextBlock Text="Grid Columns" />
+                        <Slider x:ConnectionId='8' x:Name="GridColumnsSlider" 
+                                Minimum="3" Maximum="10" 
+                                Value="6" 
+                                StepFrequency="1"
+                                TickFrequency="1"
+                                TickPlacement="Outside"
+                                                                              />
+                        <TextBlock x:ConnectionId='9' x:Name="GridColumnsText" 
+                                  Text="6 columns" 
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    
+                    <!-- Icon Size -->
+                    <StackPanel Grid.Row="1" Spacing="8">
+                        <TextBlock Text="Icon Size" />
+                        <Slider x:ConnectionId='6' x:Name="IconSizeSlider" 
+                                Minimum="32" Maximum="128" 
+                                Value="64" 
+                                StepFrequency="8"
+                                                                           />
+                        <TextBlock x:ConnectionId='7' x:Name="IconSizeText" 
+                                  Text="64 pixels" 
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    
+                    <!-- Popup Opacity -->
+                    <StackPanel Grid.Row="2" Spacing="8">
+                        <TextBlock Text="Popup Opacity" />
+                        <Slider x:ConnectionId='4' x:Name="PopupOpacitySlider" 
+                                Minimum="0.5" Maximum="1.0" 
+                                Value="0.95" 
+                                StepFrequency="0.05"
+                                                                               />
+                        <TextBlock x:ConnectionId='5' x:Name="PopupOpacityText" 
+                                  Text="95%" 
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    
+                </Grid>
+            </StackPanel>
+            
+            <!-- Actions -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Margin="0,24,0,0">
+                <Button x:ConnectionId='2' Grid.Column="1" Content="Minimize to Tray" 
+                                                     
+                        Padding="16,8" />
+                <Button x:ConnectionId='3' Grid.Column="2" Content="Test Popup" 
+                                               
+                        Style="{StaticResource AccentButtonStyle}"
+                        Padding="16,8" />
+            </Grid>
+            
+        </StackPanel>
+    </ScrollViewer>
+</Page>
+
