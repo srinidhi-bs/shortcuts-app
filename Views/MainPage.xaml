@@ -21,19 +21,73 @@
             <!-- Hotkey Section -->
             <StackPanel Spacing="16">
                 <TextBlock Text="Hotkey" FontSize="20" FontWeight="Medium" />
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                    <TextBox x:Name="HotkeyTextBox" 
-                             PlaceholderText="Press keys to set hotkey"
-                             IsReadOnly="True"
-                             KeyDown="HotkeyTextBox_KeyDown" />
-                    <Button Grid.Column="1" Content="Clear" 
-                            Click="ClearHotkey_Click" />
+                
+                <!-- Hotkey Capture Area -->
+                <Border x:Name="HotkeyCaptureContainer"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="16">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                        
+                        <!-- Hotkey Display -->
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                            <TextBox x:Name="HotkeyTextBox" 
+                                     PlaceholderText="Click 'Record' and press your desired key combination"
+                                     IsReadOnly="True"
+                                     Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"/>
+                            <Button x:Name="RecordHotkeyButton" Grid.Column="1" 
+                                    Content="Record"
+                                    Click="RecordHotkey_Click"
+                                    Style="{StaticResource AccentButtonStyle}" />
+                            <Button Grid.Column="2" Content="Clear" 
+                                    Click="ClearHotkey_Click" />
+                        </Grid>
+                        
+                        <!-- Status and Feedback -->
+                        <StackPanel Grid.Row="1" Spacing="8">
+                            <TextBlock x:Name="HotkeyStatusText" 
+                                      Text="Configure a global hotkey to quickly access your shortcuts"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      FontSize="12" />
+                            
+                            <!-- Conflict Warning -->
+                            <InfoBar x:Name="HotkeyConflictInfo"
+                                    Severity="Warning"
+                                    Title="Hotkey Conflict Detected"
+                                    Message="This hotkey combination may conflict with system shortcuts. Consider using a different combination."
+                                    IsOpen="False"
+                                    IsClosable="True" />
+                        </StackPanel>
+                        
+                        <!-- Enable/Disable Toggle -->
+                        <CheckBox x:Name="EnableHotkeyCheckBox" Grid.Row="2"
+                                  Content="Enable global hotkey" 
+                                  IsChecked="True" 
+                                  Checked="EnableHotkey_Changed"
+                                  Unchecked="EnableHotkey_Changed" />
+                    </Grid>
+                </Border>
+                
+                <!-- Hotkey Recording Overlay -->
+                <Grid x:Name="HotkeyRecordingOverlay" 
+                      Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                      CornerRadius="8"
+                      Padding="24"
+                      Visibility="Collapsed">
+                    <StackPanel HorizontalAlignment="Center" Spacing="16">
+                        <ProgressRing IsActive="True" Width="32" Height="32" />
+                        <TextBlock Text="Press your desired key combination..."
+                                  HorizontalAlignment="Center"
+                                  FontWeight="Medium" />
+                        <TextBlock Text="Press Escape to cancel"
+                                  HorizontalAlignment="Center"
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                  FontSize="12" />
+                    </StackPanel>
                 </Grid>
-                <CheckBox x:Name="EnableHotkeyCheckBox" 
-                          Content="Enable global hotkey" 
-                          IsChecked="True" 
-                          Checked="EnableHotkey_Changed"
-                          Unchecked="EnableHotkey_Changed" />
+                
             </StackPanel>
             
             <!-- Shortcuts Section -->

@@ -12,7 +12,16 @@ namespace ShortcutsApp.Views
     {
         private readonly SettingsService _settingsService;
         private AppSettings? _currentSettings;
-        private readonly List<string> _pressedKeys = new();
+        private bool _isRecordingHotkey = false;
+        private readonly HashSet<string> _pressedKeys = new();
+        private readonly List<string> _conflictingHotkeys = new()
+        {
+            // System reserved hotkeys that should trigger conflict warnings
+            "Control + C", "Control + V", "Control + X", "Control + Z", "Control + Y",
+            "Control + A", "Control + S", "Control + O", "Control + N", "Control + P",
+            "Alt + Tab", "Alt + F4", "Windows + L", "Windows + D", "Windows + R",
+            "Control + Alt + Delete", "Control + Shift + Escape"
+        };
         
         public ObservableCollection<ShortcutItem> Shortcuts { get; } = new();
 
@@ -67,41 +76,253 @@ namespace ShortcutsApp.Views
             }
         }
 
-        private void HotkeyTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        /// <summary>
+        /// Handles the "Record" button click to start hotkey capture mode.
+        /// This method enables visual feedback and prepares the UI for hotkey input.
+        /// </summary>
+        private void RecordHotkey_Click(object sender, RoutedEventArgs e)
         {
+            if (_isRecordingHotkey)
+            {
+                StopHotkeyRecording();
+                return;
+            }
+
+            StartHotkeyRecording();
+        }
+
+        /// <summary>
+        /// Starts the hotkey recording mode with visual feedback and keyboard focus.
+        /// </summary>
+        private void StartHotkeyRecording()
+        {
+            _isRecordingHotkey = true;
+            _pressedKeys.Clear();
+            
+            // Update UI to show recording state
+            RecordHotkeyButton.Content = "Stop";
+            HotkeyRecordingOverlay.Visibility = Visibility.Visible;
+            HotkeyStatusText.Text = "Recording... Press your desired key combination";
+            HotkeyConflictInfo.IsOpen = false;
+            
+            // Set focus to enable key capture
+            HotkeyTextBox.Focus(FocusState.Keyboard);
+            
+            // Subscribe to global key events for better capture
+            this.KeyDown += MainPage_KeyDown;
+            this.KeyUp += MainPage_KeyUp;
+        }
+
+        /// <summary>
+        /// Stops hotkey recording and restores normal UI state.
+        /// </summary>
+        private void StopHotkeyRecording()
+        {
+            _isRecordingHotkey = false;
+            
+            // Update UI to normal state
+            RecordHotkeyButton.Content = "Record";
+            HotkeyRecordingOverlay.Visibility = Visibility.Collapsed;
+            HotkeyStatusText.Text = "Configure a global hotkey to quickly access your shortcuts";
+            
+            // Unsubscribe from key events
+            this.KeyDown -= MainPage_KeyDown;
+            this.KeyUp -= MainPage_KeyUp;
+        }
+
+        /// <summary>
+        /// Handles key down events during hotkey recording.
+        /// Captures modifier keys and builds the hotkey combination.
+        /// </summary>
+        private void MainPage_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (!_isRecordingHotkey) return;
+            
             e.Handled = true;
             
-            var key = e.Key.ToString();
-            var modifiers = new List<string>();
-            
-            // For now, we'll use a simplified approach for modifier keys
-            // The user will need to manually type the combination
-            if (key.Length == 1 && char.IsLetter(key[0]))
+            // Handle Escape key to cancel recording
+            if (e.Key == Windows.System.VirtualKey.Escape)
             {
-                modifiers.Add("Control"); // Default to Ctrl for letters
+                StopHotkeyRecording();
+                return;
             }
             
-            // Skip if only modifier keys are pressed
-            if (key == "Control" || key == "Shift" || key == "Menu" || key == "LeftWindows" || key == "RightWindows")
-                return;
-                
-            if (modifiers.Any())
+            var keyName = GetFriendlyKeyName(e.Key);
+            
+            // Add to pressed keys if not already present
+            if (!string.IsNullOrEmpty(keyName))
             {
-                _currentSettings.HotKey.Modifiers = modifiers;
-                _currentSettings.HotKey.Key = key;
-                
-                var hotkeyText = string.Join(" + ", modifiers) + " + " + key;
-                HotkeyTextBox.Text = hotkeyText;
-                
-                SaveSettings();
+                _pressedKeys.Add(keyName);
+                UpdateHotkeyDisplay();
             }
         }
 
+        /// <summary>
+        /// Handles key up events during hotkey recording.
+        /// Completes the hotkey capture when all keys are released.
+        /// </summary>
+        private void MainPage_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (!_isRecordingHotkey || _pressedKeys.Count == 0) return;
+            
+            // Small delay to allow for multiple key combinations
+            var timer = new Microsoft.UI.Xaml.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            timer.Tick += (s, args) =>
+            {
+                timer.Stop();
+                if (_isRecordingHotkey && _pressedKeys.Count > 0)
+                {
+                    CompleteHotkeyCapture();
+                }
+            };
+            timer.Start();
+        }
+
+        /// <summary>
+        /// Completes the hotkey capture process and validates the combination.
+        /// </summary>
+        private void CompleteHotkeyCapture()
+        {
+            var keys = _pressedKeys.ToList();
+            
+            // Separate modifiers from main key
+            var modifiers = keys.Where(k => IsModifierKey(k)).ToList();
+            var mainKey = keys.FirstOrDefault(k => !IsModifierKey(k));
+            
+            if (!string.IsNullOrEmpty(mainKey) && modifiers.Any())
+            {
+                // Update settings
+                _currentSettings.HotKey.Modifiers = modifiers;
+                _currentSettings.HotKey.Key = mainKey;
+                
+                // Check for conflicts
+                var hotkeyText = string.Join(" + ", modifiers.OrderBy(m => m)) + " + " + mainKey;
+                CheckHotkeyConflicts(hotkeyText);
+                
+                // Update UI
+                HotkeyTextBox.Text = hotkeyText;
+                HotkeyStatusText.Text = "Hotkey captured successfully!";
+                
+                SaveSettings();
+            }
+            else
+            {
+                HotkeyStatusText.Text = "Invalid combination. Please include at least one modifier key (Ctrl, Alt, Shift, or Windows).";
+            }
+            
+            StopHotkeyRecording();
+        }
+
+        /// <summary>
+        /// Updates the hotkey display during recording to show current key combination.
+        /// </summary>
+        private void UpdateHotkeyDisplay()
+        {
+            if (_pressedKeys.Any())
+            {
+                var sortedKeys = _pressedKeys.OrderBy(k => IsModifierKey(k) ? 0 : 1).ThenBy(k => k);
+                HotkeyTextBox.Text = string.Join(" + ", sortedKeys);
+            }
+        }
+
+        /// <summary>
+        /// Converts system virtual key codes to user-friendly key names.
+        /// </summary>
+        private string GetFriendlyKeyName(Windows.System.VirtualKey key)
+        {
+            return key switch
+            {
+                // Modifier keys
+                Windows.System.VirtualKey.Control or Windows.System.VirtualKey.LeftControl or Windows.System.VirtualKey.RightControl => "Control",
+                Windows.System.VirtualKey.Shift or Windows.System.VirtualKey.LeftShift or Windows.System.VirtualKey.RightShift => "Shift",
+                Windows.System.VirtualKey.Menu or Windows.System.VirtualKey.LeftMenu or Windows.System.VirtualKey.RightMenu => "Alt",
+                Windows.System.VirtualKey.LeftWindows or Windows.System.VirtualKey.RightWindows => "Windows",
+                
+                // Function keys
+                Windows.System.VirtualKey.F1 => "F1",
+                Windows.System.VirtualKey.F2 => "F2",
+                Windows.System.VirtualKey.F3 => "F3",
+                Windows.System.VirtualKey.F4 => "F4",
+                Windows.System.VirtualKey.F5 => "F5",
+                Windows.System.VirtualKey.F6 => "F6",
+                Windows.System.VirtualKey.F7 => "F7",
+                Windows.System.VirtualKey.F8 => "F8",
+                Windows.System.VirtualKey.F9 => "F9",
+                Windows.System.VirtualKey.F10 => "F10",
+                Windows.System.VirtualKey.F11 => "F11",
+                Windows.System.VirtualKey.F12 => "F12",
+                
+                // Special keys
+                Windows.System.VirtualKey.Space => "Space",
+                Windows.System.VirtualKey.Enter => "Enter",
+                Windows.System.VirtualKey.Tab => "Tab",
+                Windows.System.VirtualKey.Back => "Backspace",
+                Windows.System.VirtualKey.Delete => "Delete",
+                Windows.System.VirtualKey.Insert => "Insert",
+                Windows.System.VirtualKey.Home => "Home",
+                Windows.System.VirtualKey.End => "End",
+                Windows.System.VirtualKey.PageUp => "PageUp",
+                Windows.System.VirtualKey.PageDown => "PageDown",
+                
+                // Arrow keys
+                Windows.System.VirtualKey.Up => "Up",
+                Windows.System.VirtualKey.Down => "Down",
+                Windows.System.VirtualKey.Left => "Left",
+                Windows.System.VirtualKey.Right => "Right",
+                
+                // Numbers and letters (convert to string)
+                >= Windows.System.VirtualKey.A and <= Windows.System.VirtualKey.Z => key.ToString(),
+                >= Windows.System.VirtualKey.Number0 and <= Windows.System.VirtualKey.Number9 => key.ToString().Replace("Number", ""),
+                
+                // Default case
+                _ => key.ToString()
+            };
+        }
+
+        /// <summary>
+        /// Determines if a key is a modifier key (Ctrl, Alt, Shift, Windows).
+        /// </summary>
+        private bool IsModifierKey(string key)
+        {
+            return key is "Control" or "Alt" or "Shift" or "Windows";
+        }
+
+        /// <summary>
+        /// Checks if the captured hotkey conflicts with common system shortcuts.
+        /// </summary>
+        private void CheckHotkeyConflicts(string hotkeyText)
+        {
+            if (_conflictingHotkeys.Contains(hotkeyText))
+            {
+                HotkeyConflictInfo.Message = $"The combination '{hotkeyText}' may conflict with system shortcuts. Consider using a different combination.";
+                HotkeyConflictInfo.IsOpen = true;
+            }
+            else
+            {
+                HotkeyConflictInfo.IsOpen = false;
+            }
+        }
+
+        /// <summary>
+        /// Handles the "Clear" button click to remove the current hotkey configuration.
+        /// </summary>
         private void ClearHotkey_Click(object sender, RoutedEventArgs e)
         {
+            // Stop any active recording
+            if (_isRecordingHotkey)
+            {
+                StopHotkeyRecording();
+            }
+            
+            // Clear the hotkey configuration
             HotkeyTextBox.Text = "";
             _currentSettings.HotKey.Modifiers.Clear();
             _currentSettings.HotKey.Key = "";
+            
+            // Reset UI state
+            HotkeyStatusText.Text = "Hotkey cleared. Click 'Record' to set a new hotkey.";
+            HotkeyConflictInfo.IsOpen = false;
+            
             SaveSettings();
         }
 
