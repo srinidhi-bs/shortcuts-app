@@ -66,10 +66,15 @@
 ## Pending Tasks ⏳
 
 ### 9. Enhanced Shortcuts Management
-- [ ] Improve shortcut adding workflow
-- [ ] Add drag-and-drop support for shortcuts
-- [ ] Implement shortcut reordering
-- [ ] Add shortcut editing capabilities (rename, change icon)
+- [x] Improve shortcut adding workflow with better UX
+- [x] Add shortcut editing capabilities (rename shortcuts)
+- [x] Enhance visual design with card-based layout
+- [x] Add confirmation dialogs for remove operations
+- [x] Improve file type support (.exe, .lnk, .msi, .bat, .cmd)
+- [x] Add duplicate detection and error handling
+- [x] Implement automatic order rebalancing after removals
+- [ ] Add drag-and-drop support for shortcuts  
+- [ ] Implement shortcut reordering functionality
 
 ### 10. Application Launching
 - [ ] Implement secure process launching

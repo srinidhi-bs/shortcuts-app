@@ -5,6 +5,9 @@ using ShortcutsApp.Services;
 using System.Collections.ObjectModel;
 using Windows.Storage.Pickers;
 using Windows.Storage;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using Microsoft.UI.Text;
 
 namespace ShortcutsApp.Views
 {
@@ -367,17 +370,141 @@ namespace ShortcutsApp.Views
             }
         }
 
+        /// <summary>
+        /// Handles the edit shortcut button click to allow renaming shortcuts.
+        /// Opens a dialog where users can modify the shortcut's display name.
+        /// </summary>
+        private async void EditShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is string id)
+            {
+                var shortcut = Shortcuts.FirstOrDefault(s => s.Id == id);
+                if (shortcut != null)
+                {
+                    await ShowEditShortcutDialog(shortcut);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shows the edit shortcut dialog for renaming shortcuts.
+        /// Provides a user-friendly interface for modifying shortcut properties.
+        /// </summary>
+        private async Task ShowEditShortcutDialog(ShortcutItem shortcut)
+        {
+            var stackPanel = new StackPanel { Spacing = 16 };
+            
+            // Name editing section
+            stackPanel.Children.Add(new TextBlock 
+            { 
+                Text = "Shortcut Name:", 
+                FontWeight = FontWeights.Medium 
+            });
+            
+            var nameTextBox = new TextBox 
+            { 
+                Text = shortcut.Name,
+                PlaceholderText = "Enter shortcut name"
+            };
+            stackPanel.Children.Add(nameTextBox);
+            
+            // Path display section (read-only information)
+            stackPanel.Children.Add(new TextBlock 
+            { 
+                Text = "File Path:", 
+                FontWeight = FontWeights.Medium,
+                Margin = new Thickness(0, 8, 0, 0)
+            });
+            
+            stackPanel.Children.Add(new TextBlock 
+            { 
+                Text = shortcut.Path,
+                Foreground = new SolidColorBrush(Colors.Gray),
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 12
+            });
+
+            var dialog = new ContentDialog
+            {
+                Title = "Edit Shortcut",
+                Content = stackPanel,
+                PrimaryButtonText = "Save",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                var newName = nameTextBox.Text.Trim();
+                if (!string.IsNullOrEmpty(newName) && newName != shortcut.Name)
+                {
+                    // Update the shortcut name
+                    shortcut.Name = newName;
+                    await _settingsService.UpdateShortcutAsync(shortcut);
+                    
+                    // Refresh the UI by updating the observable collection
+                    var index = Shortcuts.IndexOf(shortcut);
+                    if (index >= 0)
+                    {
+                        // Trigger property change notification
+                        Shortcuts.RemoveAt(index);
+                        Shortcuts.Insert(index, shortcut);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles removing a shortcut with confirmation dialog.
+        /// Provides a safety check before permanently removing shortcuts.
+        /// </summary>
         private async void RemoveShortcut_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.CommandParameter is string id)
             {
-                await _settingsService.RemoveShortcutAsync(id);
                 var shortcut = Shortcuts.FirstOrDefault(s => s.Id == id);
                 if (shortcut != null)
                 {
-                    Shortcuts.Remove(shortcut);
+                    // Show confirmation dialog for better user experience
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Remove Shortcut",
+                        Content = $"Are you sure you want to remove '{shortcut.Name}' from your shortcuts?",
+                        PrimaryButtonText = "Remove",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Close,
+                        XamlRoot = this.XamlRoot
+                    };
+
+                    var result = await dialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        await _settingsService.RemoveShortcutAsync(id);
+                        Shortcuts.Remove(shortcut);
+                        UpdateShortcutsVisibility();
+                        
+                        // Reorder remaining shortcuts to maintain consecutive order
+                        await ReorderShortcuts();
+                    }
                 }
-                UpdateShortcutsVisibility();
+            }
+        }
+
+        /// <summary>
+        /// Reorders all shortcuts to maintain consecutive order values after removals.
+        /// Ensures that the shortcut ordering remains consistent in the settings.
+        /// </summary>
+        private async Task ReorderShortcuts()
+        {
+            for (int i = 0; i < Shortcuts.Count; i++)
+            {
+                if (Shortcuts[i].Order != i)
+                {
+                    Shortcuts[i].Order = i;
+                    await _settingsService.UpdateShortcutAsync(Shortcuts[i]);
+                }
             }
         }
 
