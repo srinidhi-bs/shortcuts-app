@@ -85,6 +85,14 @@
 - [x] Provide fallback icons for unsupported file types
 - [x] Support different icon sizes
 
+### 12. Bug Fixes and Application Stability
+- [x] Fix "Test Popup" button - resolved WinUI 3 popup window lifecycle issues
+- [x] Fix global hotkey popup launch - implemented window disposal detection and recreation
+- [x] Resolve async void deadlock issues in popup loading
+- [x] Fix thread affinity violations causing COM exceptions
+- [x] Add comprehensive logging for debugging popup window behavior
+- [x] Implement proper window state management for consistent functionality
+
 ## In Progress 🔄
 
 ## Pending Tasks ⏳

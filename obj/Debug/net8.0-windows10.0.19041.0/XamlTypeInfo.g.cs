@@ -226,7 +226,7 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
         
         private void InitTypeTables()
         {
-            _typeNameTable = new string[41];
+            _typeNameTable = new string[43];
             _typeNameTable[0] = "Microsoft.UI.Xaml.Controls.XamlControlsResources";
             _typeNameTable[1] = "Microsoft.UI.Xaml.ResourceDictionary";
             _typeNameTable[2] = "Object";
@@ -256,20 +256,22 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
             _typeNameTable[26] = "System.Collections.ObjectModel.Collection`1<ShortcutsApp.Models.ShortcutItem>";
             _typeNameTable[27] = "ShortcutsApp.Models.ShortcutItem";
             _typeNameTable[28] = "Int32";
-            _typeNameTable[29] = "WinUIEx.WindowEx";
-            _typeNameTable[30] = "Microsoft.UI.Xaml.Window";
-            _typeNameTable[31] = "Microsoft.UI.Windowing.AppWindow";
-            _typeNameTable[32] = "WinUIEx.Icon";
-            _typeNameTable[33] = "WinUIEx.WindowState";
-            _typeNameTable[34] = "Microsoft.UI.Windowing.AppWindowPresenter";
-            _typeNameTable[35] = "Microsoft.UI.Windowing.AppWindowPresenterKind";
-            _typeNameTable[36] = "WinUIEx.SystemBackdrop";
-            _typeNameTable[37] = "Microsoft.UI.Xaml.Controls.GridViewItem";
-            _typeNameTable[38] = "ShortcutsApp.Views.PopupWindow";
-            _typeNameTable[39] = "Microsoft.UI.Xaml.Controls.TreeViewNode";
-            _typeNameTable[40] = "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>";
+            _typeNameTable[29] = "System.Nullable`1<System.DateTime>";
+            _typeNameTable[30] = "System.DateTime";
+            _typeNameTable[31] = "WinUIEx.WindowEx";
+            _typeNameTable[32] = "Microsoft.UI.Xaml.Window";
+            _typeNameTable[33] = "Microsoft.UI.Windowing.AppWindow";
+            _typeNameTable[34] = "WinUIEx.Icon";
+            _typeNameTable[35] = "WinUIEx.WindowState";
+            _typeNameTable[36] = "Microsoft.UI.Windowing.AppWindowPresenter";
+            _typeNameTable[37] = "Microsoft.UI.Windowing.AppWindowPresenterKind";
+            _typeNameTable[38] = "WinUIEx.SystemBackdrop";
+            _typeNameTable[39] = "Microsoft.UI.Xaml.Controls.GridViewItem";
+            _typeNameTable[40] = "ShortcutsApp.Views.PopupWindow";
+            _typeNameTable[41] = "Microsoft.UI.Xaml.Controls.TreeViewNode";
+            _typeNameTable[42] = "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>";
 
-            _typeTable = new global::System.Type[41];
+            _typeTable = new global::System.Type[43];
             _typeTable[0] = typeof(global::Microsoft.UI.Xaml.Controls.XamlControlsResources);
             _typeTable[1] = typeof(global::Microsoft.UI.Xaml.ResourceDictionary);
             _typeTable[2] = typeof(global::System.Object);
@@ -299,20 +301,22 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
             _typeTable[26] = typeof(global::System.Collections.ObjectModel.Collection<global::ShortcutsApp.Models.ShortcutItem>);
             _typeTable[27] = typeof(global::ShortcutsApp.Models.ShortcutItem);
             _typeTable[28] = typeof(global::System.Int32);
-            _typeTable[29] = typeof(global::WinUIEx.WindowEx);
-            _typeTable[30] = typeof(global::Microsoft.UI.Xaml.Window);
-            _typeTable[31] = typeof(global::Microsoft.UI.Windowing.AppWindow);
-            _typeTable[32] = typeof(global::WinUIEx.Icon);
-            _typeTable[33] = typeof(global::WinUIEx.WindowState);
-            _typeTable[34] = typeof(global::Microsoft.UI.Windowing.AppWindowPresenter);
-            _typeTable[35] = typeof(global::Microsoft.UI.Windowing.AppWindowPresenterKind);
+            _typeTable[29] = typeof(global::System.Nullable<global::System.DateTime>);
+            _typeTable[30] = typeof(global::System.DateTime);
+            _typeTable[31] = typeof(global::WinUIEx.WindowEx);
+            _typeTable[32] = typeof(global::Microsoft.UI.Xaml.Window);
+            _typeTable[33] = typeof(global::Microsoft.UI.Windowing.AppWindow);
+            _typeTable[34] = typeof(global::WinUIEx.Icon);
+            _typeTable[35] = typeof(global::WinUIEx.WindowState);
+            _typeTable[36] = typeof(global::Microsoft.UI.Windowing.AppWindowPresenter);
+            _typeTable[37] = typeof(global::Microsoft.UI.Windowing.AppWindowPresenterKind);
 #pragma warning disable 0618  //   Warning on Deprecated usage
-            _typeTable[36] = typeof(global::WinUIEx.SystemBackdrop);
+            _typeTable[38] = typeof(global::WinUIEx.SystemBackdrop);
 #pragma warning restore 0618
-            _typeTable[37] = typeof(global::Microsoft.UI.Xaml.Controls.GridViewItem);
-            _typeTable[38] = typeof(global::ShortcutsApp.Views.PopupWindow);
-            _typeTable[39] = typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode);
-            _typeTable[40] = typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>);
+            _typeTable[39] = typeof(global::Microsoft.UI.Xaml.Controls.GridViewItem);
+            _typeTable[40] = typeof(global::ShortcutsApp.Views.PopupWindow);
+            _typeTable[41] = typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode);
+            _typeTable[42] = typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -355,8 +359,8 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
         private object Activate_25_ObservableCollection() { return new global::System.Collections.ObjectModel.ObservableCollection<global::ShortcutsApp.Models.ShortcutItem>(); }
         private object Activate_26_Collection() { return new global::System.Collections.ObjectModel.Collection<global::ShortcutsApp.Models.ShortcutItem>(); }
         private object Activate_27_ShortcutItem() { return new global::ShortcutsApp.Models.ShortcutItem(); }
-        private object Activate_29_WindowEx() { return new global::WinUIEx.WindowEx(); }
-        private object Activate_39_TreeViewNode() { return new global::Microsoft.UI.Xaml.Controls.TreeViewNode(); }
+        private object Activate_31_WindowEx() { return new global::WinUIEx.WindowEx(); }
+        private object Activate_41_TreeViewNode() { return new global::Microsoft.UI.Xaml.Controls.TreeViewNode(); }
         private void StaticInitializer_0_XamlControlsResources() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.XamlControlsResources).TypeHandle);
         private void StaticInitializer_4_Color() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Windows.UI.Color).TypeHandle);
         private void StaticInitializer_5_ValueType() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.ValueType).TypeHandle);
@@ -372,18 +376,20 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
         private void StaticInitializer_25_ObservableCollection() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.ObjectModel.ObservableCollection<global::ShortcutsApp.Models.ShortcutItem>).TypeHandle);
         private void StaticInitializer_26_Collection() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.ObjectModel.Collection<global::ShortcutsApp.Models.ShortcutItem>).TypeHandle);
         private void StaticInitializer_27_ShortcutItem() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::ShortcutsApp.Models.ShortcutItem).TypeHandle);
-        private void StaticInitializer_29_WindowEx() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.WindowEx).TypeHandle);
-        private void StaticInitializer_31_AppWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindow).TypeHandle);
-        private void StaticInitializer_32_Icon() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.Icon).TypeHandle);
-        private void StaticInitializer_33_WindowState() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.WindowState).TypeHandle);
-        private void StaticInitializer_34_AppWindowPresenter() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindowPresenter).TypeHandle);
-        private void StaticInitializer_35_AppWindowPresenterKind() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindowPresenterKind).TypeHandle);
+        private void StaticInitializer_29_Nullable() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Nullable<global::System.DateTime>).TypeHandle);
+        private void StaticInitializer_30_DateTime() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.DateTime).TypeHandle);
+        private void StaticInitializer_31_WindowEx() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.WindowEx).TypeHandle);
+        private void StaticInitializer_33_AppWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindow).TypeHandle);
+        private void StaticInitializer_34_Icon() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.Icon).TypeHandle);
+        private void StaticInitializer_35_WindowState() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.WindowState).TypeHandle);
+        private void StaticInitializer_36_AppWindowPresenter() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindowPresenter).TypeHandle);
+        private void StaticInitializer_37_AppWindowPresenterKind() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Windowing.AppWindowPresenterKind).TypeHandle);
 #pragma warning disable 0618  //   Warning on Deprecated usage
-        private void StaticInitializer_36_SystemBackdrop() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.SystemBackdrop).TypeHandle);
+        private void StaticInitializer_38_SystemBackdrop() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::WinUIEx.SystemBackdrop).TypeHandle);
 #pragma warning restore 0618
-        private void StaticInitializer_38_PopupWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::ShortcutsApp.Views.PopupWindow).TypeHandle);
-        private void StaticInitializer_39_TreeViewNode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode).TypeHandle);
-        private void StaticInitializer_40_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>).TypeHandle);
+        private void StaticInitializer_40_PopupWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::ShortcutsApp.Views.PopupWindow).TypeHandle);
+        private void StaticInitializer_41_TreeViewNode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode).TypeHandle);
+        private void StaticInitializer_42_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>).TypeHandle);
         private void MapAdd_0_XamlControlsResources(object instance, object key, object item)
         {
             var collection = (global::System.Collections.Generic.IDictionary<global::System.Object, global::System.Object>)instance;
@@ -403,7 +409,7 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
             var newItem = (global::ShortcutsApp.Models.ShortcutItem)item;
             collection.Add(newItem);
         }
-        private void VectorAdd_40_IList(object instance, object item)
+        private void VectorAdd_42_IList(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::Microsoft.UI.Xaml.Controls.TreeViewNode>)instance;
             var newItem = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)item;
@@ -610,6 +616,9 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 userType.AddMemberName("Path");
                 userType.AddMemberName("IconPath");
                 userType.AddMemberName("Order");
+                userType.AddMemberName("UsageCount");
+                userType.AddMemberName("LastUsedAt");
+                userType.AddMemberName("FirstUsedAt");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -618,10 +627,25 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 xamlType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 29:   //  WinUIEx.WindowEx
+            case 29:   //  System.Nullable`1<System.DateTime>
+                userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.ValueType"));
+                userType.SetBoxedType(GetXamlTypeByName("System.DateTime"));
+                userType.BoxInstance = userType.BoxType<global::System.DateTime>;
+                userType.StaticInitializer = StaticInitializer_29_Nullable;
+                userType.SetIsReturnTypeStub();
+                xamlType = userType;
+                break;
+
+            case 30:   //  System.DateTime
+                userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.ValueType"));
+                userType.StaticInitializer = StaticInitializer_30_DateTime;
+                xamlType = userType;
+                break;
+
+            case 31:   //  WinUIEx.WindowEx
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Window"));
-                userType.Activator = Activate_29_WindowEx;
-                userType.StaticInitializer = StaticInitializer_29_WindowEx;
+                userType.Activator = Activate_31_WindowEx;
+                userType.StaticInitializer = StaticInitializer_31_WindowEx;
                 userType.SetContentPropertyName("WinUIEx.WindowEx.WindowContent");
                 userType.AddMemberName("WindowContent");
                 userType.AddMemberName("AppWindow");
@@ -648,44 +672,44 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 30:   //  Microsoft.UI.Xaml.Window
+            case 32:   //  Microsoft.UI.Xaml.Window
                 xamlType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 31:   //  Microsoft.UI.Windowing.AppWindow
+            case 33:   //  Microsoft.UI.Windowing.AppWindow
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.StaticInitializer = StaticInitializer_31_AppWindow;
+                userType.StaticInitializer = StaticInitializer_33_AppWindow;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 32:   //  WinUIEx.Icon
+            case 34:   //  WinUIEx.Icon
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.StaticInitializer = StaticInitializer_32_Icon;
+                userType.StaticInitializer = StaticInitializer_34_Icon;
                 userType.CreateFromStringMethod = global::WinUIEx.Icon.FromFile;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 33:   //  WinUIEx.WindowState
+            case 35:   //  WinUIEx.WindowState
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Enum"));
-                userType.StaticInitializer = StaticInitializer_33_WindowState;
+                userType.StaticInitializer = StaticInitializer_35_WindowState;
                 userType.AddEnumValue("Normal", global::WinUIEx.WindowState.Normal);
                 userType.AddEnumValue("Minimized", global::WinUIEx.WindowState.Minimized);
                 userType.AddEnumValue("Maximized", global::WinUIEx.WindowState.Maximized);
                 xamlType = userType;
                 break;
 
-            case 34:   //  Microsoft.UI.Windowing.AppWindowPresenter
+            case 36:   //  Microsoft.UI.Windowing.AppWindowPresenter
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.StaticInitializer = StaticInitializer_34_AppWindowPresenter;
+                userType.StaticInitializer = StaticInitializer_36_AppWindowPresenter;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 35:   //  Microsoft.UI.Windowing.AppWindowPresenterKind
+            case 37:   //  Microsoft.UI.Windowing.AppWindowPresenterKind
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Enum"));
-                userType.StaticInitializer = StaticInitializer_35_AppWindowPresenterKind;
+                userType.StaticInitializer = StaticInitializer_37_AppWindowPresenterKind;
                 userType.AddEnumValue("Default", global::Microsoft.UI.Windowing.AppWindowPresenterKind.Default);
                 userType.AddEnumValue("CompactOverlay", global::Microsoft.UI.Windowing.AppWindowPresenterKind.CompactOverlay);
                 userType.AddEnumValue("FullScreen", global::Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen);
@@ -693,29 +717,29 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 36:   //  WinUIEx.SystemBackdrop
+            case 38:   //  WinUIEx.SystemBackdrop
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.StaticInitializer = StaticInitializer_36_SystemBackdrop;
+                userType.StaticInitializer = StaticInitializer_38_SystemBackdrop;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 37:   //  Microsoft.UI.Xaml.Controls.GridViewItem
+            case 39:   //  Microsoft.UI.Xaml.Controls.GridViewItem
                 xamlType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 38:   //  ShortcutsApp.Views.PopupWindow
+            case 40:   //  ShortcutsApp.Views.PopupWindow
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("WinUIEx.WindowEx"));
-                userType.StaticInitializer = StaticInitializer_38_PopupWindow;
+                userType.StaticInitializer = StaticInitializer_40_PopupWindow;
                 userType.SetContentPropertyName("WinUIEx.WindowEx.WindowContent");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 39:   //  Microsoft.UI.Xaml.Controls.TreeViewNode
+            case 41:   //  Microsoft.UI.Xaml.Controls.TreeViewNode
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.DependencyObject"));
-                userType.Activator = Activate_39_TreeViewNode;
-                userType.StaticInitializer = StaticInitializer_39_TreeViewNode;
+                userType.Activator = Activate_41_TreeViewNode;
+                userType.StaticInitializer = StaticInitializer_41_TreeViewNode;
                 userType.AddMemberName("Children");
                 userType.AddMemberName("Content");
                 userType.AddMemberName("Depth");
@@ -727,10 +751,10 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 40:   //  System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
+            case 42:   //  System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
                 userType = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType(this, typeName, type, null);
-                userType.StaticInitializer = StaticInitializer_40_IList;
-                userType.CollectionAdd = VectorAdd_40_IList;
+                userType.StaticInitializer = StaticInitializer_42_IList;
+                userType.CollectionAdd = VectorAdd_42_IList;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
@@ -1090,264 +1114,294 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
             var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
             that.Order = (global::System.Int32)Value;
         }
-        private object get_31_WindowEx_WindowContent(object instance)
+        private object get_31_ShortcutItem_UsageCount(object instance)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            return that.UsageCount;
+        }
+        private void set_31_ShortcutItem_UsageCount(object instance, object Value)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            that.UsageCount = (global::System.Int32)Value;
+        }
+        private object get_32_ShortcutItem_LastUsedAt(object instance)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            return that.LastUsedAt;
+        }
+        private void set_32_ShortcutItem_LastUsedAt(object instance, object Value)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            that.LastUsedAt = (global::System.Nullable<global::System.DateTime>)Value;
+        }
+        private object get_33_ShortcutItem_FirstUsedAt(object instance)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            return that.FirstUsedAt;
+        }
+        private void set_33_ShortcutItem_FirstUsedAt(object instance, object Value)
+        {
+            var that = (global::ShortcutsApp.Models.ShortcutItem)instance;
+            that.FirstUsedAt = (global::System.Nullable<global::System.DateTime>)Value;
+        }
+        private object get_34_WindowEx_WindowContent(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.WindowContent;
         }
-        private void set_31_WindowEx_WindowContent(object instance, object Value)
+        private void set_34_WindowEx_WindowContent(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.WindowContent = (global::System.Object)Value;
         }
-        private object get_32_WindowEx_AppWindow(object instance)
+        private object get_35_WindowEx_AppWindow(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.AppWindow;
         }
-        private object get_33_WindowEx_TaskBarIcon(object instance)
+        private object get_36_WindowEx_TaskBarIcon(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.TaskBarIcon;
         }
-        private void set_33_WindowEx_TaskBarIcon(object instance, object Value)
+        private void set_36_WindowEx_TaskBarIcon(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.TaskBarIcon = (global::WinUIEx.Icon)Value;
         }
-        private object get_34_WindowEx_Title(object instance)
+        private object get_37_WindowEx_Title(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.Title;
         }
-        private void set_34_WindowEx_Title(object instance, object Value)
+        private void set_37_WindowEx_Title(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.Title = (global::System.String)Value;
         }
-        private object get_35_WindowEx_PersistenceId(object instance)
+        private object get_38_WindowEx_PersistenceId(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.PersistenceId;
         }
-        private void set_35_WindowEx_PersistenceId(object instance, object Value)
+        private void set_38_WindowEx_PersistenceId(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.PersistenceId = (global::System.String)Value;
         }
-        private object get_36_WindowEx_IsTitleBarVisible(object instance)
+        private object get_39_WindowEx_IsTitleBarVisible(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsTitleBarVisible;
         }
-        private void set_36_WindowEx_IsTitleBarVisible(object instance, object Value)
+        private void set_39_WindowEx_IsTitleBarVisible(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsTitleBarVisible = (global::System.Boolean)Value;
         }
-        private object get_37_WindowEx_IsMinimizable(object instance)
+        private object get_40_WindowEx_IsMinimizable(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsMinimizable;
         }
-        private void set_37_WindowEx_IsMinimizable(object instance, object Value)
+        private void set_40_WindowEx_IsMinimizable(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsMinimizable = (global::System.Boolean)Value;
         }
-        private object get_38_WindowEx_IsMaximizable(object instance)
+        private object get_41_WindowEx_IsMaximizable(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsMaximizable;
         }
-        private void set_38_WindowEx_IsMaximizable(object instance, object Value)
+        private void set_41_WindowEx_IsMaximizable(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsMaximizable = (global::System.Boolean)Value;
         }
-        private object get_39_WindowEx_IsResizable(object instance)
+        private object get_42_WindowEx_IsResizable(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsResizable;
         }
-        private void set_39_WindowEx_IsResizable(object instance, object Value)
+        private void set_42_WindowEx_IsResizable(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsResizable = (global::System.Boolean)Value;
         }
-        private object get_40_WindowEx_IsVisibleInTray(object instance)
+        private object get_43_WindowEx_IsVisibleInTray(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsVisibleInTray;
         }
-        private void set_40_WindowEx_IsVisibleInTray(object instance, object Value)
+        private void set_43_WindowEx_IsVisibleInTray(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsVisibleInTray = (global::System.Boolean)Value;
         }
-        private object get_41_WindowEx_WindowState(object instance)
+        private object get_44_WindowEx_WindowState(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.WindowState;
         }
-        private void set_41_WindowEx_WindowState(object instance, object Value)
+        private void set_44_WindowEx_WindowState(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.WindowState = (global::WinUIEx.WindowState)Value;
         }
-        private object get_42_WindowEx_IsShownInSwitchers(object instance)
+        private object get_45_WindowEx_IsShownInSwitchers(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsShownInSwitchers;
         }
-        private void set_42_WindowEx_IsShownInSwitchers(object instance, object Value)
+        private void set_45_WindowEx_IsShownInSwitchers(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsShownInSwitchers = (global::System.Boolean)Value;
         }
-        private object get_43_WindowEx_IsAlwaysOnTop(object instance)
+        private object get_46_WindowEx_IsAlwaysOnTop(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.IsAlwaysOnTop;
         }
-        private void set_43_WindowEx_IsAlwaysOnTop(object instance, object Value)
+        private void set_46_WindowEx_IsAlwaysOnTop(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.IsAlwaysOnTop = (global::System.Boolean)Value;
         }
-        private object get_44_WindowEx_Presenter(object instance)
+        private object get_47_WindowEx_Presenter(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.Presenter;
         }
-        private object get_45_WindowEx_PresenterKind(object instance)
+        private object get_48_WindowEx_PresenterKind(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.PresenterKind;
         }
-        private void set_45_WindowEx_PresenterKind(object instance, object Value)
+        private void set_48_WindowEx_PresenterKind(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.PresenterKind = (global::Microsoft.UI.Windowing.AppWindowPresenterKind)Value;
         }
-        private object get_46_WindowEx_Width(object instance)
+        private object get_49_WindowEx_Width(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.Width;
         }
-        private void set_46_WindowEx_Width(object instance, object Value)
+        private void set_49_WindowEx_Width(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.Width = (global::System.Double)Value;
         }
-        private object get_47_WindowEx_Height(object instance)
+        private object get_50_WindowEx_Height(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.Height;
         }
-        private void set_47_WindowEx_Height(object instance, object Value)
+        private void set_50_WindowEx_Height(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.Height = (global::System.Double)Value;
         }
-        private object get_48_WindowEx_MinWidth(object instance)
+        private object get_51_WindowEx_MinWidth(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.MinWidth;
         }
-        private void set_48_WindowEx_MinWidth(object instance, object Value)
+        private void set_51_WindowEx_MinWidth(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.MinWidth = (global::System.Double)Value;
         }
-        private object get_49_WindowEx_MinHeight(object instance)
+        private object get_52_WindowEx_MinHeight(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.MinHeight;
         }
-        private void set_49_WindowEx_MinHeight(object instance, object Value)
+        private void set_52_WindowEx_MinHeight(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.MinHeight = (global::System.Double)Value;
         }
-        private object get_50_WindowEx_MaxWidth(object instance)
+        private object get_53_WindowEx_MaxWidth(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.MaxWidth;
         }
-        private void set_50_WindowEx_MaxWidth(object instance, object Value)
+        private void set_53_WindowEx_MaxWidth(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.MaxWidth = (global::System.Double)Value;
         }
-        private object get_51_WindowEx_MaxHeight(object instance)
+        private object get_54_WindowEx_MaxHeight(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.MaxHeight;
         }
-        private void set_51_WindowEx_MaxHeight(object instance, object Value)
+        private void set_54_WindowEx_MaxHeight(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.MaxHeight = (global::System.Double)Value;
         }
 #pragma warning disable 0618  //   Warning on Deprecated usage
-        private object get_52_WindowEx_Backdrop(object instance)
+        private object get_55_WindowEx_Backdrop(object instance)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             return that.Backdrop;
         }
-        private void set_52_WindowEx_Backdrop(object instance, object Value)
+        private void set_55_WindowEx_Backdrop(object instance, object Value)
         {
             var that = (global::WinUIEx.WindowEx)instance;
             that.Backdrop = (global::WinUIEx.SystemBackdrop)Value;
         }
 #pragma warning restore 0618
-        private object get_53_TreeViewNode_Children(object instance)
+        private object get_56_TreeViewNode_Children(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Children;
         }
-        private object get_54_TreeViewNode_Content(object instance)
+        private object get_57_TreeViewNode_Content(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Content;
         }
-        private void set_54_TreeViewNode_Content(object instance, object Value)
+        private void set_57_TreeViewNode_Content(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.Content = (global::System.Object)Value;
         }
-        private object get_55_TreeViewNode_Depth(object instance)
+        private object get_58_TreeViewNode_Depth(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Depth;
         }
-        private object get_56_TreeViewNode_HasChildren(object instance)
+        private object get_59_TreeViewNode_HasChildren(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.HasChildren;
         }
-        private object get_57_TreeViewNode_HasUnrealizedChildren(object instance)
+        private object get_60_TreeViewNode_HasUnrealizedChildren(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.HasUnrealizedChildren;
         }
-        private void set_57_TreeViewNode_HasUnrealizedChildren(object instance, object Value)
+        private void set_60_TreeViewNode_HasUnrealizedChildren(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.HasUnrealizedChildren = (global::System.Boolean)Value;
         }
-        private object get_58_TreeViewNode_IsExpanded(object instance)
+        private object get_61_TreeViewNode_IsExpanded(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.IsExpanded;
         }
-        private void set_58_TreeViewNode_IsExpanded(object instance, object Value)
+        private void set_61_TreeViewNode_IsExpanded(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.IsExpanded = (global::System.Boolean)Value;
         }
-        private object get_59_TreeViewNode_Parent(object instance)
+        private object get_62_TreeViewNode_Parent(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Parent;
@@ -1566,182 +1620,200 @@ namespace ShortcutsApp.ShortcutsApp_XamlTypeInfo
                 xamlMember.Getter = get_30_ShortcutItem_Order;
                 xamlMember.Setter = set_30_ShortcutItem_Order;
                 break;
+            case "ShortcutsApp.Models.ShortcutItem.UsageCount":
+                userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("ShortcutsApp.Models.ShortcutItem");
+                xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "UsageCount", "Int32");
+                xamlMember.Getter = get_31_ShortcutItem_UsageCount;
+                xamlMember.Setter = set_31_ShortcutItem_UsageCount;
+                break;
+            case "ShortcutsApp.Models.ShortcutItem.LastUsedAt":
+                userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("ShortcutsApp.Models.ShortcutItem");
+                xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "LastUsedAt", "System.Nullable`1<System.DateTime>");
+                xamlMember.Getter = get_32_ShortcutItem_LastUsedAt;
+                xamlMember.Setter = set_32_ShortcutItem_LastUsedAt;
+                break;
+            case "ShortcutsApp.Models.ShortcutItem.FirstUsedAt":
+                userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("ShortcutsApp.Models.ShortcutItem");
+                xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "FirstUsedAt", "System.Nullable`1<System.DateTime>");
+                xamlMember.Getter = get_33_ShortcutItem_FirstUsedAt;
+                xamlMember.Setter = set_33_ShortcutItem_FirstUsedAt;
+                break;
             case "WinUIEx.WindowEx.WindowContent":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "WindowContent", "Object");
-                xamlMember.Getter = get_31_WindowEx_WindowContent;
-                xamlMember.Setter = set_31_WindowEx_WindowContent;
+                xamlMember.Getter = get_34_WindowEx_WindowContent;
+                xamlMember.Setter = set_34_WindowEx_WindowContent;
                 break;
             case "WinUIEx.WindowEx.AppWindow":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "AppWindow", "Microsoft.UI.Windowing.AppWindow");
-                xamlMember.Getter = get_32_WindowEx_AppWindow;
+                xamlMember.Getter = get_35_WindowEx_AppWindow;
                 xamlMember.SetIsReadOnly();
                 break;
             case "WinUIEx.WindowEx.TaskBarIcon":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "TaskBarIcon", "WinUIEx.Icon");
-                xamlMember.Getter = get_33_WindowEx_TaskBarIcon;
-                xamlMember.Setter = set_33_WindowEx_TaskBarIcon;
+                xamlMember.Getter = get_36_WindowEx_TaskBarIcon;
+                xamlMember.Setter = set_36_WindowEx_TaskBarIcon;
                 break;
             case "WinUIEx.WindowEx.Title":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Title", "String");
-                xamlMember.Getter = get_34_WindowEx_Title;
-                xamlMember.Setter = set_34_WindowEx_Title;
+                xamlMember.Getter = get_37_WindowEx_Title;
+                xamlMember.Setter = set_37_WindowEx_Title;
                 break;
             case "WinUIEx.WindowEx.PersistenceId":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "PersistenceId", "String");
-                xamlMember.Getter = get_35_WindowEx_PersistenceId;
-                xamlMember.Setter = set_35_WindowEx_PersistenceId;
+                xamlMember.Getter = get_38_WindowEx_PersistenceId;
+                xamlMember.Setter = set_38_WindowEx_PersistenceId;
                 break;
             case "WinUIEx.WindowEx.IsTitleBarVisible":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsTitleBarVisible", "Boolean");
-                xamlMember.Getter = get_36_WindowEx_IsTitleBarVisible;
-                xamlMember.Setter = set_36_WindowEx_IsTitleBarVisible;
+                xamlMember.Getter = get_39_WindowEx_IsTitleBarVisible;
+                xamlMember.Setter = set_39_WindowEx_IsTitleBarVisible;
                 break;
             case "WinUIEx.WindowEx.IsMinimizable":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsMinimizable", "Boolean");
-                xamlMember.Getter = get_37_WindowEx_IsMinimizable;
-                xamlMember.Setter = set_37_WindowEx_IsMinimizable;
+                xamlMember.Getter = get_40_WindowEx_IsMinimizable;
+                xamlMember.Setter = set_40_WindowEx_IsMinimizable;
                 break;
             case "WinUIEx.WindowEx.IsMaximizable":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsMaximizable", "Boolean");
-                xamlMember.Getter = get_38_WindowEx_IsMaximizable;
-                xamlMember.Setter = set_38_WindowEx_IsMaximizable;
+                xamlMember.Getter = get_41_WindowEx_IsMaximizable;
+                xamlMember.Setter = set_41_WindowEx_IsMaximizable;
                 break;
             case "WinUIEx.WindowEx.IsResizable":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsResizable", "Boolean");
-                xamlMember.Getter = get_39_WindowEx_IsResizable;
-                xamlMember.Setter = set_39_WindowEx_IsResizable;
+                xamlMember.Getter = get_42_WindowEx_IsResizable;
+                xamlMember.Setter = set_42_WindowEx_IsResizable;
                 break;
             case "WinUIEx.WindowEx.IsVisibleInTray":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsVisibleInTray", "Boolean");
-                xamlMember.Getter = get_40_WindowEx_IsVisibleInTray;
-                xamlMember.Setter = set_40_WindowEx_IsVisibleInTray;
+                xamlMember.Getter = get_43_WindowEx_IsVisibleInTray;
+                xamlMember.Setter = set_43_WindowEx_IsVisibleInTray;
                 break;
             case "WinUIEx.WindowEx.WindowState":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "WindowState", "WinUIEx.WindowState");
-                xamlMember.Getter = get_41_WindowEx_WindowState;
-                xamlMember.Setter = set_41_WindowEx_WindowState;
+                xamlMember.Getter = get_44_WindowEx_WindowState;
+                xamlMember.Setter = set_44_WindowEx_WindowState;
                 break;
             case "WinUIEx.WindowEx.IsShownInSwitchers":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsShownInSwitchers", "Boolean");
-                xamlMember.Getter = get_42_WindowEx_IsShownInSwitchers;
-                xamlMember.Setter = set_42_WindowEx_IsShownInSwitchers;
+                xamlMember.Getter = get_45_WindowEx_IsShownInSwitchers;
+                xamlMember.Setter = set_45_WindowEx_IsShownInSwitchers;
                 break;
             case "WinUIEx.WindowEx.IsAlwaysOnTop":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsAlwaysOnTop", "Boolean");
-                xamlMember.Getter = get_43_WindowEx_IsAlwaysOnTop;
-                xamlMember.Setter = set_43_WindowEx_IsAlwaysOnTop;
+                xamlMember.Getter = get_46_WindowEx_IsAlwaysOnTop;
+                xamlMember.Setter = set_46_WindowEx_IsAlwaysOnTop;
                 break;
             case "WinUIEx.WindowEx.Presenter":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Presenter", "Microsoft.UI.Windowing.AppWindowPresenter");
-                xamlMember.Getter = get_44_WindowEx_Presenter;
+                xamlMember.Getter = get_47_WindowEx_Presenter;
                 xamlMember.SetIsReadOnly();
                 break;
             case "WinUIEx.WindowEx.PresenterKind":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "PresenterKind", "Microsoft.UI.Windowing.AppWindowPresenterKind");
-                xamlMember.Getter = get_45_WindowEx_PresenterKind;
-                xamlMember.Setter = set_45_WindowEx_PresenterKind;
+                xamlMember.Getter = get_48_WindowEx_PresenterKind;
+                xamlMember.Setter = set_48_WindowEx_PresenterKind;
                 break;
             case "WinUIEx.WindowEx.Width":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Width", "Double");
-                xamlMember.Getter = get_46_WindowEx_Width;
-                xamlMember.Setter = set_46_WindowEx_Width;
+                xamlMember.Getter = get_49_WindowEx_Width;
+                xamlMember.Setter = set_49_WindowEx_Width;
                 break;
             case "WinUIEx.WindowEx.Height":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Height", "Double");
-                xamlMember.Getter = get_47_WindowEx_Height;
-                xamlMember.Setter = set_47_WindowEx_Height;
+                xamlMember.Getter = get_50_WindowEx_Height;
+                xamlMember.Setter = set_50_WindowEx_Height;
                 break;
             case "WinUIEx.WindowEx.MinWidth":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "MinWidth", "Double");
-                xamlMember.Getter = get_48_WindowEx_MinWidth;
-                xamlMember.Setter = set_48_WindowEx_MinWidth;
+                xamlMember.Getter = get_51_WindowEx_MinWidth;
+                xamlMember.Setter = set_51_WindowEx_MinWidth;
                 break;
             case "WinUIEx.WindowEx.MinHeight":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "MinHeight", "Double");
-                xamlMember.Getter = get_49_WindowEx_MinHeight;
-                xamlMember.Setter = set_49_WindowEx_MinHeight;
+                xamlMember.Getter = get_52_WindowEx_MinHeight;
+                xamlMember.Setter = set_52_WindowEx_MinHeight;
                 break;
             case "WinUIEx.WindowEx.MaxWidth":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "MaxWidth", "Double");
-                xamlMember.Getter = get_50_WindowEx_MaxWidth;
-                xamlMember.Setter = set_50_WindowEx_MaxWidth;
+                xamlMember.Getter = get_53_WindowEx_MaxWidth;
+                xamlMember.Setter = set_53_WindowEx_MaxWidth;
                 break;
             case "WinUIEx.WindowEx.MaxHeight":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "MaxHeight", "Double");
-                xamlMember.Getter = get_51_WindowEx_MaxHeight;
-                xamlMember.Setter = set_51_WindowEx_MaxHeight;
+                xamlMember.Getter = get_54_WindowEx_MaxHeight;
+                xamlMember.Setter = set_54_WindowEx_MaxHeight;
                 break;
             case "WinUIEx.WindowEx.Backdrop":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinUIEx.WindowEx");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Backdrop", "WinUIEx.SystemBackdrop");
-                xamlMember.Getter = get_52_WindowEx_Backdrop;
-                xamlMember.Setter = set_52_WindowEx_Backdrop;
+                xamlMember.Getter = get_55_WindowEx_Backdrop;
+                xamlMember.Setter = set_55_WindowEx_Backdrop;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Children":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Children", "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>");
-                xamlMember.Getter = get_53_TreeViewNode_Children;
+                xamlMember.Getter = get_56_TreeViewNode_Children;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Content":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Content", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_54_TreeViewNode_Content;
-                xamlMember.Setter = set_54_TreeViewNode_Content;
+                xamlMember.Getter = get_57_TreeViewNode_Content;
+                xamlMember.Setter = set_57_TreeViewNode_Content;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Depth":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Depth", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_55_TreeViewNode_Depth;
+                xamlMember.Getter = get_58_TreeViewNode_Depth;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.HasChildren":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "HasChildren", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_56_TreeViewNode_HasChildren;
+                xamlMember.Getter = get_59_TreeViewNode_HasChildren;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.HasUnrealizedChildren":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "HasUnrealizedChildren", "Boolean");
-                xamlMember.Getter = get_57_TreeViewNode_HasUnrealizedChildren;
-                xamlMember.Setter = set_57_TreeViewNode_HasUnrealizedChildren;
+                xamlMember.Getter = get_60_TreeViewNode_HasUnrealizedChildren;
+                xamlMember.Setter = set_60_TreeViewNode_HasUnrealizedChildren;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.IsExpanded":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "IsExpanded", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_58_TreeViewNode_IsExpanded;
-                xamlMember.Setter = set_58_TreeViewNode_IsExpanded;
+                xamlMember.Getter = get_61_TreeViewNode_IsExpanded;
+                xamlMember.Setter = set_61_TreeViewNode_IsExpanded;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Parent":
                 userType = (global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::ShortcutsApp.ShortcutsApp_XamlTypeInfo.XamlMember(this, "Parent", "Microsoft.UI.Xaml.Controls.TreeViewNode");
-                xamlMember.Getter = get_59_TreeViewNode_Parent;
+                xamlMember.Getter = get_62_TreeViewNode_Parent;
                 xamlMember.SetIsReadOnly();
                 break;
             }
