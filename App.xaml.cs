@@ -49,6 +49,12 @@ namespace ShortcutsApp
         private SettingsService? _settingsService;
         
         /// <summary>
+        /// Service responsible for launching applications, files, and shortcuts.
+        /// Provides comprehensive error handling and support for different file types.
+        /// </summary>
+        private LaunchingService? _launchingService;
+        
+        /// <summary>
         /// Popup window that displays shortcuts when the global hotkey is activated.
         /// This window appears as an overlay and allows users to quickly launch applications.
         /// </summary>
@@ -117,13 +123,16 @@ namespace ShortcutsApp
             // 1. Initialize Settings Service (required by other services)
             InitializeSettingsService();
             
-            // 2. Initialize Popup Window (requires settings service)
+            // 2. Initialize Launching Service (required by popup window)
+            InitializeLaunchingService();
+            
+            // 3. Initialize Popup Window (requires settings and launching services)
             InitializePopupWindow();
             
-            // 3. Initialize System Tray Service
+            // 4. Initialize System Tray Service
             InitializeSystemTray();
             
-            // 4. Initialize Hotkey Service
+            // 5. Initialize Hotkey Service
             InitializeHotkeyService();
         }
         
@@ -148,6 +157,26 @@ namespace ShortcutsApp
         }
         
         /// <summary>
+        /// Initializes the launching service for launching applications and files.
+        /// This service handles different file types and provides comprehensive error handling.
+        /// </summary>
+        private void InitializeLaunchingService()
+        {
+            try
+            {
+                _launchingService = new LaunchingService();
+                _services[typeof(LaunchingService)] = _launchingService;
+                
+                System.Diagnostics.Debug.WriteLine("Launching service initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize launching service: {ex.Message}");
+                throw; // Launching service is critical for app functionality
+            }
+        }
+        
+        /// <summary>
         /// Initializes the popup window that displays shortcuts when the global hotkey is pressed.
         /// This window shows all configured shortcuts in a grid layout for quick access.
         /// </summary>
@@ -155,8 +184,8 @@ namespace ShortcutsApp
         {
             try
             {
-                // Create the popup window instance with the settings service
-                _popupWindow = new Views.PopupWindow(_settingsService!);
+                // Create the popup window instance with both settings and launching services
+                _popupWindow = new Views.PopupWindow(_settingsService!, _launchingService!);
                 
                 // Add it to the services container for dependency injection
                 _services[typeof(Views.PopupWindow)] = _popupWindow;
@@ -439,8 +468,9 @@ namespace ShortcutsApp
                     System.Diagnostics.Debug.WriteLine("System tray service cleaned up");
                 }
                 
-                // Settings service doesn't need special cleanup, but clear the reference
+                // Settings and launching services don't need special cleanup, but clear the references
                 _settingsService = null;
+                _launchingService = null;
                 
                 // Clean up any other services in the container
                 foreach (var service in _services.Values)

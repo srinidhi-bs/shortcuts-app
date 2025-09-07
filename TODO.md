@@ -77,9 +77,9 @@
 - [x] Implement shortcut reordering functionality with up/down arrow buttons
 
 ### 10. Application Launching
-- [ ] Implement secure process launching
-- [ ] Add support for different file types (.exe, .lnk, documents)
-- [ ] Handle launch errors gracefully
+- [x] Implement secure process launching
+- [x] Add support for different file types (.exe, .lnk, documents)
+- [x] Handle launch errors gracefully
 - [ ] Track recently used shortcuts
 
 ### 11. Icon Extraction and Display

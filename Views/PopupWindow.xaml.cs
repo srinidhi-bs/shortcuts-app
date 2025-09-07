@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.System;
 using WinUIEx;
 
@@ -23,6 +24,7 @@ namespace ShortcutsApp.Views
         #region Private Fields
         
         private readonly SettingsService _settingsService;
+        private readonly LaunchingService _launchingService;
         private ObservableCollection<ShortcutDisplayItem> _shortcuts;
         private int _currentSelectedIndex = 0;
         private int _gridColumns = 6; // Default, will be updated from settings
@@ -35,10 +37,12 @@ namespace ShortcutsApp.Views
         /// Initializes a new instance of the PopupWindow
         /// </summary>
         /// <param name="settingsService">Service for loading settings and shortcuts</param>
-        public PopupWindow(SettingsService settingsService)
+        /// <param name="launchingService">Service for launching applications and files</param>
+        public PopupWindow(SettingsService settingsService, LaunchingService launchingService)
         {
             this.InitializeComponent();
             _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
+            _launchingService = launchingService ?? throw new ArgumentNullException(nameof(launchingService));
             
             // Initialize shortcuts collection
             _shortcuts = new ObservableCollection<ShortcutDisplayItem>();
@@ -203,43 +207,75 @@ namespace ShortcutsApp.Views
         }
 
         /// <summary>
-        /// Launches the selected shortcut application
+        /// Launches the selected shortcut application using the improved LaunchingService
+        /// Provides comprehensive error handling and user feedback for failed launches
         /// </summary>
         /// <param name="shortcut">The shortcut to launch</param>
         private async void LaunchShortcut(ShortcutDisplayItem shortcut)
         {
             try
             {
+                // Validate shortcut data before attempting launch
                 if (string.IsNullOrEmpty(shortcut.Path))
                 {
-                    Debug.WriteLine("Cannot launch shortcut: Path is empty");
+                    await ShowErrorDialog("Launch Error", "Cannot launch shortcut: Path is empty");
                     return;
                 }
+
+                // Use the improved LaunchingService for better file type support and error handling
+                var launchResult = await _launchingService.LaunchAsync(shortcut.Path);
                 
-                // Check if file exists
-                if (!File.Exists(shortcut.Path))
+                if (launchResult.Success)
                 {
-                    Debug.WriteLine($"Cannot launch shortcut: File not found at {shortcut.Path}");
-                    return;
-                }
-                
-                // Launch the application using Windows launcher
-                var result = await Launcher.LaunchUriAsync(new Uri($"file:///{shortcut.Path}"));
-                
-                if (result)
-                {
-                    Debug.WriteLine($"Successfully launched: {shortcut.Name}");
+                    Debug.WriteLine($"Successfully launched: {shortcut.Name} at {launchResult.LaunchTime}");
+                    
                     // Hide popup after successful launch
                     HidePopup();
+                    
+                    // TODO: Track usage for recently used shortcuts feature
+                    // await TrackShortcutUsage(shortcut);
                 }
                 else
                 {
-                    Debug.WriteLine($"Failed to launch: {shortcut.Name}");
+                    // Show user-friendly error dialog with specific error information
+                    Debug.WriteLine($"Failed to launch {shortcut.Name}: {launchResult.ErrorMessage}");
+                    await ShowErrorDialog($"Failed to Launch '{shortcut.Name}'", 
+                        launchResult.ErrorMessage ?? "Unknown error occurred");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error launching shortcut '{shortcut.Name}': {ex.Message}");
+                // Handle any unexpected errors that weren't caught by LaunchingService
+                var errorMessage = $"Unexpected error launching '{shortcut.Name}': {ex.Message}";
+                Debug.WriteLine(errorMessage);
+                await ShowErrorDialog("Unexpected Error", errorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Shows an error dialog to inform the user about launch failures
+        /// Provides a better user experience than silent failures
+        /// </summary>
+        /// <param name="title">Dialog title</param>
+        /// <param name="message">Error message to display</param>
+        private async Task ShowErrorDialog(string title, string message)
+        {
+            try
+            {
+                var dialog = new ContentDialog()
+                {
+                    Title = title,
+                    Content = message,
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
+                };
+
+                await dialog.ShowAsync();
+            }
+            catch (Exception ex)
+            {
+                // Fallback to debug output if dialog fails
+                Debug.WriteLine($"Error showing dialog: {ex.Message}. Original error: {title} - {message}");
             }
         }
 
