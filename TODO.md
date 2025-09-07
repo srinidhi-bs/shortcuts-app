@@ -80,14 +80,14 @@
 - [x] Implement secure process launching
 - [x] Add support for different file types (.exe, .lnk, documents)
 - [x] Handle launch errors gracefully
-- [ ] Track recently used shortcuts
+- [x] Track recently used shortcuts
 
 ### 11. Icon Extraction and Display
-- [ ] Create IconExtractionService
-- [ ] Extract icons from executables and shortcuts
-- [ ] Cache icons for performance
-- [ ] Provide fallback icons for unsupported file types
-- [ ] Support different icon sizes
+- [x] Create IconExtractionService
+- [x] Extract icons from executables and shortcuts
+- [x] Cache icons for performance
+- [x] Provide fallback icons for unsupported file types
+- [x] Support different icon sizes
 
 ## Technical Debt and Improvements
 

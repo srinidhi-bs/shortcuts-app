@@ -42,6 +42,16 @@ namespace ShortcutsApp.Models
 
         [JsonPropertyName("order")]
         public int Order { get; set; } = 0;
+
+        // Recently used tracking properties
+        [JsonPropertyName("usageCount")]
+        public int UsageCount { get; set; } = 0;
+
+        [JsonPropertyName("lastUsedAt")]
+        public DateTime? LastUsedAt { get; set; }
+
+        [JsonPropertyName("firstUsedAt")]
+        public DateTime? FirstUsedAt { get; set; }
     }
 
     public class AppearanceSettings

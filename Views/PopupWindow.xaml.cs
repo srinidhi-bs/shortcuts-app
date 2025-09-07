@@ -25,6 +25,7 @@ namespace ShortcutsApp.Views
         
         private readonly SettingsService _settingsService;
         private readonly LaunchingService _launchingService;
+        private readonly IconExtractionService _iconExtractionService;
         private ObservableCollection<ShortcutDisplayItem> _shortcuts;
         private int _currentSelectedIndex = 0;
         private int _gridColumns = 6; // Default, will be updated from settings
@@ -38,11 +39,13 @@ namespace ShortcutsApp.Views
         /// </summary>
         /// <param name="settingsService">Service for loading settings and shortcuts</param>
         /// <param name="launchingService">Service for launching applications and files</param>
-        public PopupWindow(SettingsService settingsService, LaunchingService launchingService)
+        /// <param name="iconExtractionService">Service for extracting and caching icons</param>
+        public PopupWindow(SettingsService settingsService, LaunchingService launchingService, IconExtractionService iconExtractionService)
         {
             this.InitializeComponent();
             _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
             _launchingService = launchingService ?? throw new ArgumentNullException(nameof(launchingService));
+            _iconExtractionService = iconExtractionService ?? throw new ArgumentNullException(nameof(iconExtractionService));
             
             // Initialize shortcuts collection
             _shortcuts = new ObservableCollection<ShortcutDisplayItem>();
@@ -145,7 +148,10 @@ namespace ShortcutsApp.Views
                         Name = s.Name,
                         Path = s.Path,
                         IconPath = s.IconPath,
-                        Order = s.Order
+                        Order = s.Order,
+                        UsageCount = s.UsageCount,
+                        LastUsedAt = s.LastUsedAt,
+                        FirstUsedAt = s.FirstUsedAt
                     });
                 
                 foreach (var shortcut in displayShortcuts)
@@ -232,8 +238,8 @@ namespace ShortcutsApp.Views
                     // Hide popup after successful launch
                     HidePopup();
                     
-                    // TODO: Track usage for recently used shortcuts feature
-                    // await TrackShortcutUsage(shortcut);
+                    // Track usage for recently used shortcuts feature
+                    await TrackShortcutUsage(shortcut);
                 }
                 else
                 {
@@ -249,6 +255,34 @@ namespace ShortcutsApp.Views
                 var errorMessage = $"Unexpected error launching '{shortcut.Name}': {ex.Message}";
                 Debug.WriteLine(errorMessage);
                 await ShowErrorDialog("Unexpected Error", errorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Tracks usage statistics for a shortcut that was successfully launched
+        /// Updates usage count and last used timestamp for recently used features
+        /// </summary>
+        /// <param name="shortcut">The shortcut that was launched</param>
+        private async Task TrackShortcutUsage(ShortcutDisplayItem shortcut)
+        {
+            try
+            {
+                // Track usage in the settings service
+                var tracked = await _settingsService.TrackShortcutUsageAsync(shortcut.Id);
+                
+                if (tracked)
+                {
+                    Debug.WriteLine($"Usage tracked for shortcut: {shortcut.Name}");
+                }
+                else
+                {
+                    Debug.WriteLine($"Failed to track usage for shortcut: {shortcut.Name} (shortcut not found)");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't disrupt user experience
+                Debug.WriteLine($"Error tracking shortcut usage for {shortcut.Name}: {ex.Message}");
             }
         }
 
@@ -504,5 +538,10 @@ namespace ShortcutsApp.Views
         public string Path { get; set; } = "";
         public string? IconPath { get; set; }
         public int Order { get; set; } = 0;
+        
+        // Usage tracking properties for display
+        public int UsageCount { get; set; } = 0;
+        public DateTime? LastUsedAt { get; set; }
+        public DateTime? FirstUsedAt { get; set; }
     }
 }

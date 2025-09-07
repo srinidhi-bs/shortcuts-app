@@ -55,6 +55,12 @@ namespace ShortcutsApp
         private LaunchingService? _launchingService;
         
         /// <summary>
+        /// Service responsible for extracting and caching icons from executables and files.
+        /// Provides high-quality icons for the shortcuts popup and handles fallback icons.
+        /// </summary>
+        private IconExtractionService? _iconExtractionService;
+        
+        /// <summary>
         /// Popup window that displays shortcuts when the global hotkey is activated.
         /// This window appears as an overlay and allows users to quickly launch applications.
         /// </summary>
@@ -126,13 +132,16 @@ namespace ShortcutsApp
             // 2. Initialize Launching Service (required by popup window)
             InitializeLaunchingService();
             
-            // 3. Initialize Popup Window (requires settings and launching services)
+            // 3. Initialize Icon Extraction Service (required by popup window)
+            InitializeIconExtractionService();
+            
+            // 4. Initialize Popup Window (requires settings, launching, and icon services)
             InitializePopupWindow();
             
-            // 4. Initialize System Tray Service
+            // 5. Initialize System Tray Service
             InitializeSystemTray();
             
-            // 5. Initialize Hotkey Service
+            // 6. Initialize Hotkey Service
             InitializeHotkeyService();
         }
         
@@ -177,6 +186,26 @@ namespace ShortcutsApp
         }
         
         /// <summary>
+        /// Initializes the icon extraction service for extracting and caching icons.
+        /// This service provides high-quality icons for the shortcuts popup.
+        /// </summary>
+        private void InitializeIconExtractionService()
+        {
+            try
+            {
+                _iconExtractionService = new IconExtractionService();
+                _services[typeof(IconExtractionService)] = _iconExtractionService;
+                
+                System.Diagnostics.Debug.WriteLine("Icon extraction service initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to initialize icon extraction service: {ex.Message}");
+                // Icon extraction is not critical - app can continue without icons
+            }
+        }
+        
+        /// <summary>
         /// Initializes the popup window that displays shortcuts when the global hotkey is pressed.
         /// This window shows all configured shortcuts in a grid layout for quick access.
         /// </summary>
@@ -184,8 +213,8 @@ namespace ShortcutsApp
         {
             try
             {
-                // Create the popup window instance with both settings and launching services
-                _popupWindow = new Views.PopupWindow(_settingsService!, _launchingService!);
+                // Create the popup window instance with settings, launching, and icon services
+                _popupWindow = new Views.PopupWindow(_settingsService!, _launchingService!, _iconExtractionService!);
                 
                 // Add it to the services container for dependency injection
                 _services[typeof(Views.PopupWindow)] = _popupWindow;

@@ -102,5 +102,93 @@ namespace ShortcutsApp.Services
             }
             return false;
         }
+
+        /// <summary>
+        /// Records usage of a shortcut by updating usage count and timestamps
+        /// This enables recently used and frequently used features
+        /// </summary>
+        /// <param name="shortcutId">ID of the shortcut that was used</param>
+        /// <returns>True if the usage was successfully recorded</returns>
+        public async Task<bool> TrackShortcutUsageAsync(string shortcutId)
+        {
+            try
+            {
+                var settings = await LoadSettingsAsync();
+                var shortcut = settings.Shortcuts.FirstOrDefault(s => s.Id == shortcutId);
+                
+                if (shortcut != null)
+                {
+                    // Update usage statistics
+                    shortcut.UsageCount++;
+                    shortcut.LastUsedAt = DateTime.Now;
+                    
+                    // Set first used time if this is the first use
+                    if (shortcut.FirstUsedAt == null)
+                    {
+                        shortcut.FirstUsedAt = DateTime.Now;
+                    }
+                    
+                    await SaveSettingsAsync(settings);
+                    return true;
+                }
+                
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to track shortcut usage: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Gets shortcuts ordered by recent usage (most recent first)
+        /// Useful for showing recently used shortcuts at the top of lists
+        /// </summary>
+        /// <param name="maxCount">Maximum number of shortcuts to return (default: 10)</param>
+        /// <returns>List of recently used shortcuts</returns>
+        public async Task<List<ShortcutItem>> GetRecentlyUsedShortcutsAsync(int maxCount = 10)
+        {
+            try
+            {
+                var settings = await LoadSettingsAsync();
+                
+                return settings.Shortcuts
+                    .Where(s => s.LastUsedAt != null) // Only include shortcuts that have been used
+                    .OrderByDescending(s => s.LastUsedAt) // Most recent first
+                    .Take(maxCount)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                // Return empty list on error instead of throwing
+                return new List<ShortcutItem>();
+            }
+        }
+
+        /// <summary>
+        /// Gets shortcuts ordered by usage frequency (most used first)
+        /// Useful for showing frequently used shortcuts
+        /// </summary>
+        /// <param name="maxCount">Maximum number of shortcuts to return (default: 10)</param>
+        /// <returns>List of frequently used shortcuts</returns>
+        public async Task<List<ShortcutItem>> GetMostUsedShortcutsAsync(int maxCount = 10)
+        {
+            try
+            {
+                var settings = await LoadSettingsAsync();
+                
+                return settings.Shortcuts
+                    .Where(s => s.UsageCount > 0) // Only include shortcuts that have been used
+                    .OrderByDescending(s => s.UsageCount) // Most used first
+                    .ThenByDescending(s => s.LastUsedAt) // Recent as tiebreaker
+                    .Take(maxCount)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                // Return empty list on error instead of throwing
+                return new List<ShortcutItem>();
+            }
+        }
     }
 }
