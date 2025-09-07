@@ -600,8 +600,27 @@ namespace ShortcutsApp.Views
 
         private void TestPopup_Click(object sender, RoutedEventArgs e)
         {
-            // This will be implemented when we create the popup window
-            System.Diagnostics.Debug.WriteLine("Test popup clicked - not implemented yet");
+            try
+            {
+                // Get the popup window from the app's service container
+                var app = ((App)App.Current);
+                var popupWindow = app.GetService<Views.PopupWindow>();
+                
+                if (popupWindow != null)
+                {
+                    // Show the popup window to test the functionality
+                    popupWindow.ShowPopup();
+                    System.Diagnostics.Debug.WriteLine("Test popup displayed successfully");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Warning: Popup window not available");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing test popup: {ex.Message}");
+            }
         }
 
         #region Drag and Drop Support

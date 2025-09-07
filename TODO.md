@@ -61,10 +61,6 @@
 - [x] Add empty state display when no shortcuts configured
 - [x] Integrate grid with settings service for real-time updates
 
-## In Progress 🔄
-
-## Pending Tasks ⏳
-
 ### 9. Enhanced Shortcuts Management
 - [x] Improve shortcut adding workflow with better UX
 - [x] Add shortcut editing capabilities (rename shortcuts)
@@ -88,6 +84,10 @@
 - [x] Cache icons for performance
 - [x] Provide fallback icons for unsupported file types
 - [x] Support different icon sizes
+
+## In Progress 🔄
+
+## Pending Tasks ⏳
 
 ## Technical Debt and Improvements
 
