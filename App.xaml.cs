@@ -404,19 +404,60 @@ namespace ShortcutsApp
         /// <param name="e">Event arguments (empty in this case)</param>
         private void OnHotkeyActivated(object? sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Global hotkey activated!");
+            Console.WriteLine("=== Global Hotkey Activated ===");
             
             // Show the shortcuts popup window
             if (_popupWindow != null)
             {
                 try
                 {
-                    _popupWindow.ShowPopup();
-                    System.Diagnostics.Debug.WriteLine("Popup window displayed successfully");
+                    // Check if we can reuse the existing popup window
+                    bool canReuse = false;
+                    try
+                    {
+                        // Try to access a property to see if window is still valid
+                        _ = _popupWindow.Visible;
+                        canReuse = true;
+                        Console.WriteLine("Existing popup window is still valid - reusing for hotkey");
+                    }
+                    catch (System.Runtime.InteropServices.COMException ex) when (ex.HResult == unchecked((int)0x800710DD))
+                    {
+                        Console.WriteLine("Existing popup window has been disposed - creating new instance for hotkey");
+                        canReuse = false;
+                    }
+                    
+                    if (canReuse)
+                    {
+                        // Show the popup window using existing instance
+                        Console.WriteLine("Calling ShowPopup() on existing window from hotkey...");
+                        _popupWindow.ShowPopup();
+                        Console.WriteLine("Hotkey popup displayed successfully");
+                    }
+                    else
+                    {
+                        // Create a new popup window instance
+                        Console.WriteLine("Creating new popup window instance for hotkey...");
+                        var settingsService = GetService<Services.SettingsService>();
+                        var launchingService = GetService<Services.LaunchingService>();
+                        var iconExtractionService = GetService<Services.IconExtractionService>();
+                        
+                        if (settingsService != null && launchingService != null && iconExtractionService != null)
+                        {
+                            _popupWindow = new Views.PopupWindow(settingsService, launchingService, iconExtractionService);
+                            Console.WriteLine("New popup window created for hotkey - calling ShowPopup()...");
+                            _popupWindow.ShowPopup();
+                            Console.WriteLine("Hotkey popup displayed successfully with new window");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Warning: Required services not available for creating new popup window from hotkey");
+                            Console.WriteLine($"Services available - Settings: {settingsService != null}, Launching: {launchingService != null}, IconExtraction: {iconExtractionService != null}");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Failed to show popup window: {ex.Message}");
+                    Console.WriteLine($"Failed to show popup window from hotkey: {ex.Message}");
                     // Fallback to showing main window if popup fails
                     OnShowMainWindowRequested(sender, e);
                 }

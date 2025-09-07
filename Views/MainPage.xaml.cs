@@ -602,24 +602,72 @@ namespace ShortcutsApp.Views
         {
             try
             {
+                Console.WriteLine("=== Test Popup Button Clicked ===");
+                
                 // Get the popup window from the app's service container
                 var app = ((App)App.Current);
+                Console.WriteLine("Got app reference");
+                
                 var popupWindow = app.GetService<Views.PopupWindow>();
+                Console.WriteLine($"Got popup window service: {popupWindow != null}");
                 
                 if (popupWindow != null)
                 {
-                    // Show the popup window to test the functionality
-                    popupWindow.ShowPopup();
-                    System.Diagnostics.Debug.WriteLine("Test popup displayed successfully");
+                    // Check if we can reuse the existing popup window
+                    bool canReuse = false;
+                    try
+                    {
+                        // Try to access a property to see if window is still valid
+                        _ = popupWindow.Visible;
+                        canReuse = true;
+                        Console.WriteLine("Existing popup window is still valid - reusing");
+                    }
+                    catch (System.Runtime.InteropServices.COMException ex) when (ex.HResult == unchecked((int)0x800710DD))
+                    {
+                        Console.WriteLine("Existing popup window has been disposed - creating new instance");
+                        canReuse = false;
+                    }
+                    
+                    if (canReuse)
+                    {
+                        // Show the popup window to test the functionality
+                        Console.WriteLine("Calling ShowPopup() on existing window...");
+                        popupWindow.ShowPopup();
+                        Console.WriteLine("Test popup displayed successfully");
+                    }
+                    else
+                    {
+                        // Create a new popup window instance
+                        Console.WriteLine("Creating new popup window instance...");
+                        var settingsService = app.GetService<Services.SettingsService>();
+                        var launchingService = app.GetService<Services.LaunchingService>();
+                        var iconExtractionService = app.GetService<Services.IconExtractionService>();
+                        
+                        if (settingsService != null && launchingService != null && iconExtractionService != null)
+                        {
+                            var newPopupWindow = new Views.PopupWindow(settingsService, launchingService, iconExtractionService);
+                            Console.WriteLine("New popup window created - calling ShowPopup()...");
+                            newPopupWindow.ShowPopup();
+                            Console.WriteLine("Test popup displayed successfully with new window");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Warning: Required services not available for creating new popup window");
+                            Console.WriteLine($"Services available - Settings: {settingsService != null}, Launching: {launchingService != null}, IconExtraction: {iconExtractionService != null}");
+                        }
+                    }
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Warning: Popup window not available");
+                    Console.WriteLine("Warning: Popup window not available");
                 }
+                
+                Console.WriteLine("=== Test Popup Button Click Complete ===");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error showing test popup: {ex.Message}");
+                Console.WriteLine($"Error showing test popup: {ex.Message}");
+                Console.WriteLine($"Exception details: {ex}");
             }
         }
 

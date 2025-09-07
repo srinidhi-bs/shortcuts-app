@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.System;
 using WinUIEx;
@@ -54,7 +55,7 @@ namespace ShortcutsApp.Views
             ConfigureWindowProperties();
             
             // Load shortcuts and configure grid
-            LoadShortcuts();
+            _ = LoadShortcutsAsync();
         }
 
         #endregion
@@ -84,12 +85,36 @@ namespace ShortcutsApp.Views
         /// <summary>
         /// Shows the popup window and refreshes shortcuts
         /// </summary>
-        public void ShowPopup()
+        public async Task ShowPopupAsync()
         {
             try
             {
+                Console.WriteLine($"ShowPopup() called - checking window state...");
+                
+                // Check if window is still valid before accessing properties
+                bool isWindowValid = true;
+                bool isVisible = false;
+                
+                try
+                {
+                    isVisible = this.Visible;
+                    Console.WriteLine($"Window Visible: {isVisible}");
+                }
+                catch (COMException ex) when (ex.HResult == unchecked((int)0x800710DD))
+                {
+                    Console.WriteLine("Window has been closed/disposed - cannot reuse");
+                    isWindowValid = false;
+                }
+                
+                if (!isWindowValid)
+                {
+                    Console.WriteLine("Cannot reuse closed window - popup functionality requires new window instance");
+                    return;
+                }
+                
                 // Refresh shortcuts from settings
-                LoadShortcuts();
+                await LoadShortcutsAsync();
+                Console.WriteLine($"LoadShortcuts() completed - Found {_shortcuts.Count} shortcuts");
                 
                 // Reset selection to first item
                 if (_shortcuts.Count > 0)
@@ -97,14 +122,48 @@ namespace ShortcutsApp.Views
                     _currentSelectedIndex = 0;
                     ShortcutsGridView.SelectedIndex = 0;
                     ShortcutsGridView.Focus(FocusState.Programmatic);
+                    Console.WriteLine($"Selection reset to first item (index {_currentSelectedIndex})");
                 }
                 
+                // Fix for WinUI 3 window reactivation issue
+                // After Hide() is called, Activate() alone may not show the window again
+                if (!isVisible)
+                {
+                    Console.WriteLine("Window not visible - calling Show()");
+                    this.Show();
+                }
+                else
+                {
+                    Console.WriteLine("Window already visible - skipping Show()");
+                }
+                
+                Console.WriteLine("Calling Activate()");
                 this.Activate();
+                
+                // Check final state
+                try
+                {
+                    Console.WriteLine($"ShowPopup() completed - Window Visible after operations: {this.Visible}");
+                }
+                catch (COMException)
+                {
+                    Console.WriteLine("ShowPopup() completed - Window state unknown (may have been closed)");
+                }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error showing popup: {ex.Message}");
+                Console.WriteLine($"Error showing popup: {ex.Message}");
+                Console.WriteLine($"Exception details: {ex}");
             }
+        }
+
+        /// <summary>
+        /// Shows the popup window synchronously (for compatibility)
+        /// </summary>
+        public void ShowPopup()
+        {
+            // Use the UI dispatcher to ensure we're on the correct thread
+            DispatcherQueue.TryEnqueue(() => _ = ShowPopupAsync());
         }
 
         /// <summary>
@@ -114,7 +173,9 @@ namespace ShortcutsApp.Views
         {
             try
             {
+                Console.WriteLine($"HidePopup() called - Window Visible before: {this.Visible}");
                 this.Hide();
+                Console.WriteLine($"HidePopup() completed - Window Visible after: {this.Visible}");
             }
             catch (Exception ex)
             {
@@ -129,7 +190,7 @@ namespace ShortcutsApp.Views
         /// <summary>
         /// Loads shortcuts from settings and updates the grid view
         /// </summary>
-        private async void LoadShortcuts()
+        private async Task LoadShortcutsAsync()
         {
             try
             {
