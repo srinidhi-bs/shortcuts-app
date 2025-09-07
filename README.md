@@ -62,17 +62,22 @@ A modern Windows desktop application that provides a global keyboard shortcut to
 ```
 ShortcutsApp/
 ├── Models/
-│   └── AppSettings.cs          # Configuration data models
+│   ├── AppSettings.cs          # Configuration data models
+│   ├── ShortcutItem.cs         # Shortcut data structure
+│   └── ShortcutDisplayItem.cs  # UI display model
 ├── Services/
 │   ├── SettingsService.cs      # JSON settings management
 │   ├── SystemTrayService.cs    # System tray functionality
-│   └── HotkeyService.cs        # Global hotkey registration
+│   ├── HotkeyService.cs        # Global hotkey registration
+│   ├── IconExtractionService.cs # Icon extraction and caching
+│   ├── LaunchingService.cs     # Application and file launching
+│   └── UsageTrackingService.cs # Usage analytics and tracking
 ├── Views/
 │   ├── MainPage.xaml           # Settings window UI
 │   ├── MainPage.xaml.cs        # Settings window logic
 │   ├── PopupWindow.xaml        # Launcher popup UI
 │   └── PopupWindow.xaml.cs     # Launcher popup logic
-└── App.xaml.cs                 # Application entry point
+└── App.xaml.cs                 # Application entry point and DI container
 ```
 
 ## 🎮 Usage
@@ -80,11 +85,20 @@ ShortcutsApp/
 ### Keyboard Shortcuts
 - **Global Hotkey**: Open/close launcher (configurable, default: Ctrl+Space)
 - **Arrow Keys**: Navigate between shortcuts in the popup
-- **Enter**: Launch selected shortcut
-- **Escape**: Close popup window
+- **Home/End**: Jump to first/last shortcut
+- **Enter**: Launch selected shortcut and close popup
+- **Escape**: Close popup window without launching
+
+### Shortcut Management
+- **Add Shortcuts**: Use file picker to add applications and files
+- **Edit Shortcuts**: Double-click or use edit button to rename shortcuts
+- **Reorder Shortcuts**: Use up/down arrow buttons or drag-and-drop
+- **Remove Shortcuts**: Click X button with confirmation dialog
+- **Drag & Drop**: Drop files directly onto the shortcuts list
 
 ### System Tray Menu
 - **Show Settings**: Open configuration window
+- **Test Popup**: Quick test of popup functionality
 - **Exit**: Close application completely
 
 ## 🔧 Development
@@ -105,32 +119,48 @@ dotnet run
 ### Architecture Highlights
 - **MVVM Pattern**: Clean separation of UI and business logic
 - **Async/Await**: Non-blocking file operations and animations
-- **Dependency Injection**: Service-based architecture
-- **Win32 Interop**: Native Windows API integration
-- **Error Handling**: Comprehensive exception handling throughout
+- **Dependency Injection**: Service-based architecture with proper lifetime management
+- **Win32 Interop**: Native Windows API integration for system-level features
+- **Error Recovery**: Advanced exception handling with COM error recovery
+- **Window Lifecycle Management**: Automatic window recreation for consistent functionality
+- **Thread Safety**: Proper UI thread marshaling with DispatcherQueue
+- **Resource Management**: Proper disposal patterns for system resources
 
 ## 🎯 Roadmap
 
-### ✅ Completed
+### ✅ Core Features Complete
 - [x] Project setup and WinUI 3 integration
 - [x] Settings system with JSON persistence
 - [x] Modern settings UI with Fluent Design
 - [x] System tray integration with Win32 APIs
 - [x] Global hotkey registration and handling
-- [x] Popup launcher window with animations
+- [x] Popup launcher window with smooth animations
+- [x] Icon grid layout with keyboard navigation
+- [x] File and application launching system
+- [x] Icon extraction and caching service
+- [x] Enhanced shortcut management with editing
+- [x] Drag-and-drop shortcut support
+- [x] Usage tracking and analytics
+- [x] Window lifecycle stability and error recovery
 
-### 🔄 In Progress
-- [ ] Enhanced hotkey conflict detection
-- [ ] Icon extraction from executables
-- [ ] Application launching improvements
+### ✅ Recently Completed
+- [x] Enhanced hotkey conflict detection and resolution
+- [x] Icon extraction from executables with caching
+- [x] Comprehensive application launching system
+- [x] Shortcut editing and management improvements
+- [x] Drag-and-drop support for shortcuts
+- [x] Shortcut reordering with up/down controls
+- [x] Usage tracking and analytics
+- [x] Window lifecycle management and stability fixes
+- [x] Thread-safe popup handling and COM exception recovery
 
-### 📋 Planned Features
-- [ ] Icon extraction and caching service
-- [ ] Drag-and-drop shortcut management
-- [ ] Search/filter functionality in popup
-- [ ] Recently used shortcuts tracking
-- [ ] Themes and customization options
-- [ ] Accessibility improvements
+### 📋 Future Enhancements
+- [ ] Search/filter functionality in popup launcher
+- [ ] Recently used shortcuts prioritization
+- [ ] Custom themes and visual customization
+- [ ] Accessibility improvements (screen reader support)
+- [ ] Backup and restore settings functionality
+- [ ] Plugin system for extended functionality
 
 ## 🤝 Contributing
 
@@ -159,6 +189,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Email: mailsrinidhibs@gmail.com
 
 *Built with learning in mind - extensive comments throughout the codebase for educational purposes.*
+
+### Status: ✅ **Production Ready**
+The application is fully functional and stable. All core features have been implemented and tested, including comprehensive bug fixes for window lifecycle management and threading issues.
 
 ---
 
