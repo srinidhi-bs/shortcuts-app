@@ -106,11 +106,18 @@
                 </Grid>
                 
                 <ListView x:Name="ShortcutsListView" 
-                          SelectionMode="None"
-                          ItemsSource="{x:Bind Shortcuts}">
+                          SelectionMode="Single"
+                          ItemsSource="{x:Bind Shortcuts}"
+                          CanDragItems="True"
+                          AllowDrop="True"
+                          DragItemsStarting="ShortcutsListView_DragItemsStarting"
+                          DragOver="ShortcutsListView_DragOver"
+                          Drop="ShortcutsListView_Drop"
+                          CanReorderItems="True"
+                          ReorderMode="Enabled">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="12" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12"
+                            <Grid Padding="12" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8"
                                   Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                   CornerRadius="4"
                                   Margin="0,2">
@@ -131,15 +138,33 @@
                                               FontSize="12" />
                                 </StackPanel>
                                 <Button Grid.Column="2" 
+                                        Content="↑"
+                                        Click="MoveShortcutUp_Click"
+                                        CommandParameter="{Binding Id}"
+                                        ToolTipService.ToolTip="Move Up"
+                                        Width="32" Height="32"
+                                        Padding="0"
+                                        FontSize="16"
+                                        Margin="2,0" />
+                                <Button Grid.Column="3" 
+                                        Content="↓"
+                                        Click="MoveShortcutDown_Click"
+                                        CommandParameter="{Binding Id}"
+                                        ToolTipService.ToolTip="Move Down"
+                                        Width="32" Height="32"
+                                        Padding="0"
+                                        FontSize="16"
+                                        Margin="2,0" />
+                                <Button Grid.Column="4" 
                                         Content="Edit"
                                         Click="EditShortcut_Click"
                                         CommandParameter="{Binding Id}"
-                                        Margin="4,0" />
-                                <Button Grid.Column="3" 
+                                        Margin="2,0" />
+                                <Button Grid.Column="5" 
                                         Content="Remove"
                                         Click="RemoveShortcut_Click"
                                         CommandParameter="{Binding Id}"
-                                        Margin="4,0" />
+                                        Margin="2,0" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

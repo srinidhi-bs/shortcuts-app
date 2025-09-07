@@ -73,8 +73,8 @@
 - [x] Improve file type support (.exe, .lnk, .msi, .bat, .cmd)
 - [x] Add duplicate detection and error handling
 - [x] Implement automatic order rebalancing after removals
-- [ ] Add drag-and-drop support for shortcuts  
-- [ ] Implement shortcut reordering functionality
+- [x] Add drag-and-drop support for shortcuts  
+- [x] Implement shortcut reordering functionality with up/down arrow buttons
 
 ### 10. Application Launching
 - [ ] Implement secure process launching

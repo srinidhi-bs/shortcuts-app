@@ -97,3 +97,9 @@ C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\pri.resfiles.i
 C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\qualifiers.txt
 C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\qualifiers.txt.intermediate
 C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\MultipleQualifiersPerDimensionFound.txt
+C:\Development\shortcuts-app\bin\Debug\net8.0-windows10.0.19041.0\Views\PopupWindow.xbf
+C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\Views\PopupWindow.g.i.cs
+C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\Views\PopupWindow.g.cs
+C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\Views\PopupWindow.xaml
+C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\Views\PopupWindow.xbf
+C:\Development\shortcuts-app\obj\Debug\net8.0-windows10.0.19041.0\ShortcutsApp.sourcelink.json

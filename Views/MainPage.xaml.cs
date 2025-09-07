@@ -8,6 +8,8 @@ using Windows.Storage;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 using Microsoft.UI.Text;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 
 namespace ShortcutsApp.Views
 {
@@ -601,5 +603,219 @@ namespace ShortcutsApp.Views
             // This will be implemented when we create the popup window
             System.Diagnostics.Debug.WriteLine("Test popup clicked - not implemented yet");
         }
+
+        #region Drag and Drop Support
+
+        /// <summary>
+        /// Handles the start of a drag operation for shortcuts.
+        /// This method is called when the user begins dragging a shortcut item in the ListView.
+        /// It sets up the data package with the shortcut information for the drag operation.
+        /// </summary>
+        /// <param name="sender">The ListView that contains the dragged item</param>
+        /// <param name="e">Event arguments containing information about the drag operation</param>
+        private void ShortcutsListView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        {
+            // Get the first (and should be only) dragged item
+            if (e.Items.FirstOrDefault() is ShortcutItem draggedItem)
+            {
+                // Store the shortcut ID in the data package for retrieval during drop
+                // Using SetText allows us to easily retrieve the ID during the drop operation
+                e.Data.SetText(draggedItem.Id);
+                
+                // Set the requested operation to Move, indicating we want to reorder items
+                e.Data.RequestedOperation = DataPackageOperation.Move;
+                
+                // Optional: Set a custom drag visual caption for better user feedback
+                // This shows the user what they're dragging
+                e.Data.Properties.Add("DraggedShortcutName", draggedItem.Name);
+                
+                System.Diagnostics.Debug.WriteLine($"Started dragging: {draggedItem.Name} (ID: {draggedItem.Id})");
+            }
+        }
+
+        /// <summary>
+        /// Handles drag over events to determine if a drop operation is allowed.
+        /// This method is called continuously while an item is being dragged over the ListView.
+        /// It determines whether the current drop location is valid and provides visual feedback.
+        /// </summary>
+        /// <param name="sender">The ListView being dragged over</param>
+        /// <param name="e">Event arguments containing drag position and data information</param>
+        private void ShortcutsListView_DragOver(object sender, DragEventArgs e)
+        {
+            // Allow drop operations for reordering shortcuts
+            // AcceptedOperation determines what type of drag operation is allowed
+            e.AcceptedOperation = DataPackageOperation.Move;
+            
+            // Optional: Add visual feedback during drag over
+            // You could change the cursor or highlight drop zones here
+            e.DragUIOverride.Caption = "Reorder shortcut";
+            e.DragUIOverride.IsGlyphVisible = true;
+        }
+
+        /// <summary>
+        /// Handles the drop event when a shortcut is dropped onto the ListView.
+        /// This method processes the dropped item and updates the shortcuts order accordingly.
+        /// It's responsible for reordering the shortcuts and saving the new arrangement.
+        /// </summary>
+        /// <param name="sender">The ListView where the item was dropped</param>
+        /// <param name="e">Event arguments containing drop position and dragged data</param>
+        private async void ShortcutsListView_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                // Step 1: Get the dropped shortcut ID from the data package
+                var draggedItemId = await e.DataView.GetTextAsync();
+                if (string.IsNullOrEmpty(draggedItemId))
+                    return;
+                
+                // Find the dragged shortcut in our collection
+                var draggedItem = Shortcuts.FirstOrDefault(s => s.Id == draggedItemId);
+                if (draggedItem == null)
+                    return;
+                
+                // Step 2: Determine the drop position/target index
+                // Get the position where the item was dropped
+                var dropPosition = e.GetPosition(ShortcutsListView);
+                var targetIndex = GetDropTargetIndex(dropPosition);
+                
+                // Get the current index of the dragged item
+                var currentIndex = Shortcuts.IndexOf(draggedItem);
+                
+                // If dropping at the same position, no need to reorder
+                if (currentIndex == targetIndex || targetIndex < 0)
+                    return;
+                
+                System.Diagnostics.Debug.WriteLine($"Moving {draggedItem.Name} from index {currentIndex} to {targetIndex}");
+                
+                // Step 3: Move the item to the new position in the collection
+                Shortcuts.Move(currentIndex, targetIndex);
+                
+                // Step 4: Update the Order property of all affected shortcuts
+                // This ensures the order is saved correctly in settings
+                for (int i = 0; i < Shortcuts.Count; i++)
+                {
+                    Shortcuts[i].Order = i;
+                }
+                
+                // Step 5: Save the changes using the settings service
+                // We need to update all shortcuts since their order changed
+                _currentSettings.Shortcuts = Shortcuts.ToList();
+                await _settingsService.SaveSettingsAsync(_currentSettings);
+                
+                System.Diagnostics.Debug.WriteLine("Shortcuts reordered and saved successfully");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors during the drop operation
+                System.Diagnostics.Debug.WriteLine($"Error during drop operation: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Determines the target index for a drop operation based on the mouse position.
+        /// This method calculates which position in the ListView the user is trying to drop the item.
+        /// </summary>
+        /// <param name="dropPosition">The position where the drop occurred</param>
+        /// <returns>The target index for the dropped item, or -1 if invalid</returns>
+        private int GetDropTargetIndex(Point dropPosition)
+        {
+            // Get the ListView's item container generator to find items at specific positions
+            var listViewItems = ShortcutsListView.Items;
+            
+            // Simple approach: calculate target index based on vertical position
+            // Each item has approximately the same height, so we can estimate the index
+            var itemHeight = 56; // Approximate height based on our item template (padding + content)
+            var targetIndex = (int)(dropPosition.Y / itemHeight);
+            
+            // Clamp the index to valid range
+            targetIndex = Math.Max(0, Math.Min(targetIndex, Shortcuts.Count - 1));
+            
+            return targetIndex;
+        }
+
+        /// <summary>
+        /// Handles moving a shortcut up in the list order.
+        /// This provides an alternative to drag-and-drop for users who prefer button-based reordering.
+        /// </summary>
+        /// <param name="sender">The up arrow button that was clicked</param>
+        /// <param name="e">Event arguments</param>
+        private async void MoveShortcutUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is string id)
+            {
+                var shortcut = Shortcuts.FirstOrDefault(s => s.Id == id);
+                if (shortcut != null)
+                {
+                    var currentIndex = Shortcuts.IndexOf(shortcut);
+                    
+                    // Can't move the first item up
+                    if (currentIndex > 0)
+                    {
+                        await MoveShortcut(currentIndex, currentIndex - 1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles moving a shortcut down in the list order.
+        /// This provides an alternative to drag-and-drop for users who prefer button-based reordering.
+        /// </summary>
+        /// <param name="sender">The down arrow button that was clicked</param>
+        /// <param name="e">Event arguments</param>
+        private async void MoveShortcutDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is string id)
+            {
+                var shortcut = Shortcuts.FirstOrDefault(s => s.Id == id);
+                if (shortcut != null)
+                {
+                    var currentIndex = Shortcuts.IndexOf(shortcut);
+                    
+                    // Can't move the last item down
+                    if (currentIndex < Shortcuts.Count - 1)
+                    {
+                        await MoveShortcut(currentIndex, currentIndex + 1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves a shortcut from one position to another and saves the changes.
+        /// This helper method is used by both button-based reordering and drag-and-drop.
+        /// </summary>
+        /// <param name="fromIndex">The current index of the item to move</param>
+        /// <param name="toIndex">The target index where the item should be moved</param>
+        private async Task MoveShortcut(int fromIndex, int toIndex)
+        {
+            try
+            {
+                // Move the item in the ObservableCollection
+                // This automatically updates the UI due to data binding
+                Shortcuts.Move(fromIndex, toIndex);
+                
+                // Update the Order property of all shortcuts to reflect new positions
+                // This ensures the order is saved correctly in the settings file
+                for (int i = 0; i < Shortcuts.Count; i++)
+                {
+                    Shortcuts[i].Order = i;
+                }
+                
+                // Save the updated shortcuts list to settings
+                // We update the entire shortcuts list since order has changed
+                _currentSettings.Shortcuts = Shortcuts.ToList();
+                await _settingsService.SaveSettingsAsync(_currentSettings);
+                
+                System.Diagnostics.Debug.WriteLine($"Moved shortcut from index {fromIndex} to {toIndex}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors during the move operation
+                System.Diagnostics.Debug.WriteLine($"Error moving shortcut: {ex.Message}");
+            }
+        }
+
+        #endregion
     }
 }

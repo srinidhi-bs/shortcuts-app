@@ -21,19 +21,73 @@
             <!-- Hotkey Section -->
             <StackPanel Spacing="16">
                 <TextBlock Text="Hotkey" FontSize="20" FontWeight="Medium" />
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                    <TextBox x:ConnectionId='16' x:Name="HotkeyTextBox" 
-                             PlaceholderText="Press keys to set hotkey"
-                             IsReadOnly="True"
-                                                             />
-                    <Button x:ConnectionId='17' Grid.Column="1" Content="Clear" 
-                                                      />
+                
+                <!-- Hotkey Capture Area -->
+                <Border x:ConnectionId='18' x:Name="HotkeyCaptureContainer"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="16">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                        
+                        <!-- Hotkey Display -->
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                            <TextBox x:ConnectionId='23' x:Name="HotkeyTextBox" 
+                                     PlaceholderText="Click 'Record' and press your desired key combination"
+                                     IsReadOnly="True"
+                                     Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"/>
+                            <Button x:ConnectionId='24' x:Name="RecordHotkeyButton" Grid.Column="1" 
+                                    Content="Record"
+                                                              
+                                    Style="{StaticResource AccentButtonStyle}" />
+                            <Button x:ConnectionId='25' Grid.Column="2" Content="Clear" 
+                                                              />
+                        </Grid>
+                        
+                        <!-- Status and Feedback -->
+                        <StackPanel Grid.Row="1" Spacing="8">
+                            <TextBlock x:ConnectionId='21' x:Name="HotkeyStatusText" 
+                                      Text="Configure a global hotkey to quickly access your shortcuts"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      FontSize="12" />
+                            
+                            <!-- Conflict Warning -->
+                            <InfoBar x:ConnectionId='22' x:Name="HotkeyConflictInfo"
+                                    Severity="Warning"
+                                    Title="Hotkey Conflict Detected"
+                                    Message="This hotkey combination may conflict with system shortcuts. Consider using a different combination."
+                                    IsOpen="False"
+                                    IsClosable="True" />
+                        </StackPanel>
+                        
+                        <!-- Enable/Disable Toggle -->
+                        <CheckBox x:ConnectionId='20' x:Name="EnableHotkeyCheckBox" Grid.Row="2"
+                                  Content="Enable global hotkey" 
+                                  IsChecked="True" 
+                                                                
+                                                                   />
+                    </Grid>
+                </Border>
+                
+                <!-- Hotkey Recording Overlay -->
+                <Grid x:ConnectionId='19' x:Name="HotkeyRecordingOverlay" 
+                      Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                      CornerRadius="8"
+                      Padding="24"
+                      Visibility="Collapsed">
+                    <StackPanel HorizontalAlignment="Center" Spacing="16">
+                        <ProgressRing IsActive="True" Width="32" Height="32" />
+                        <TextBlock Text="Press your desired key combination..."
+                                  HorizontalAlignment="Center"
+                                  FontWeight="Medium" />
+                        <TextBlock Text="Press Escape to cancel"
+                                  HorizontalAlignment="Center"
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                  FontSize="12" />
+                    </StackPanel>
                 </Grid>
-                <CheckBox x:ConnectionId='15' x:Name="EnableHotkeyCheckBox" 
-                          Content="Enable global hotkey" 
-                          IsChecked="True" 
-                                                        
-                                                           />
+                
             </StackPanel>
             
             <!-- Shortcuts Section -->
@@ -41,7 +95,7 @@
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                     <TextBlock Text="Shortcuts" FontSize="20" FontWeight="Medium" 
                               VerticalAlignment="Center" />
-                    <Button x:ConnectionId='14' Grid.Column="1" Content="Add Shortcut" 
+                    <Button x:ConnectionId='17' Grid.Column="1" Content="Add Shortcut" 
                                                      >
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
@@ -52,25 +106,65 @@
                 </Grid>
                 
                 <ListView x:ConnectionId='10' x:Name="ShortcutsListView" 
-                          SelectionMode="None"
-                                                          >
+                          SelectionMode="Single"
+                                                          
+                          CanDragItems="True"
+                          AllowDrop="True"
+                                                                                 
+                                                               
+                                                       
+                          CanReorderItems="True"
+                          ReorderMode="Enabled">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                <Image Grid.Column="0" 
-                                       Width="32" Height="32"
-                                       Source="{Binding IconPath}"
-                                       Stretch="Uniform" />
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Name}" FontWeight="Medium" />
+                            <Grid Padding="12" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8"
+                                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                  CornerRadius="4"
+                                  Margin="0,2">
+                                <Border Grid.Column="0" 
+                                        Width="32" Height="32"
+                                        Background="{ThemeResource SystemFillColorNeutralBackgroundBrush}"
+                                        CornerRadius="4">
+                                    <Image Source="{Binding IconPath}"
+                                           Stretch="Uniform" />
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0">
+                                    <TextBlock Text="{Binding Name}" 
+                                              FontWeight="Medium" 
+                                              TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding Path}" 
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                              TextTrimming="CharacterEllipsis" />
+                                              TextTrimming="CharacterEllipsis"
+                                              FontSize="12" />
                                 </StackPanel>
                                 <Button x:ConnectionId='13' Grid.Column="2" 
+                                        Content="↑"
+                                                                    
+                                        CommandParameter="{Binding Id}"
+                                        ToolTipService.ToolTip="Move Up"
+                                        Width="32" Height="32"
+                                        Padding="0"
+                                        FontSize="16"
+                                        Margin="2,0" />
+                                <Button x:ConnectionId='14' Grid.Column="3" 
+                                        Content="↓"
+                                                                      
+                                        CommandParameter="{Binding Id}"
+                                        ToolTipService.ToolTip="Move Down"
+                                        Width="32" Height="32"
+                                        Padding="0"
+                                        FontSize="16"
+                                        Margin="2,0" />
+                                <Button x:ConnectionId='15' Grid.Column="4" 
+                                        Content="Edit"
+                                                                  
+                                        CommandParameter="{Binding Id}"
+                                        Margin="2,0" />
+                                <Button x:ConnectionId='16' Grid.Column="5" 
                                         Content="Remove"
                                                                     
-                                        CommandParameter="{Binding Id}" />
+                                        CommandParameter="{Binding Id}"
+                                        Margin="2,0" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
