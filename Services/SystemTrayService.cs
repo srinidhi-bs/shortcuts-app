@@ -296,16 +296,12 @@ public class SystemTrayService : IDisposable
     
     /// <summary>
     /// Handles system tray icon messages from Windows.
-    /// This would typically be called from a window procedure in a full implementation.
-    /// 
-    /// Learning Note: In a complete implementation, you would override the window procedure
-    /// of your main window to receive and handle these messages. For simplicity in this
-    /// learning example, we're showing the structure but not the full implementation.
+    /// This is called from the main window's message procedure to process tray icon interactions.
     /// </summary>
     /// <param name="msg">The Windows message</param>
     /// <param name="wParam">Message parameter</param>
     /// <param name="lParam">Message parameter</param>
-    private void HandleTrayIconMessage(uint msg, IntPtr wParam, IntPtr lParam)
+    public void HandleTrayIconMessage(uint msg, IntPtr wParam, IntPtr lParam)
     {
         if (msg == WM_TRAYICON && wParam.ToInt32() == _iconId)
         {
@@ -314,17 +310,21 @@ public class SystemTrayService : IDisposable
             switch (mouseMessage)
             {
                 case 0x0202: // WM_LBUTTONUP - Left mouse button up
-                    // Single click - could be used for quick actions
+                    // Single left click - show main window (common behavior for system tray apps)
+                    Debug.WriteLine("System tray left click detected");
+                    ShowMainWindowRequested?.Invoke(this, EventArgs.Empty);
                     break;
                     
                 case 0x0203: // WM_LBUTTONDBLCLK - Double click
-                    // Double click - restore window
+                    // Double click - also show main window (redundant but commonly expected)
+                    Debug.WriteLine("System tray double click detected");
                     ShowMainWindowRequested?.Invoke(this, EventArgs.Empty);
                     break;
                     
                 case 0x0205: // WM_RBUTTONUP - Right mouse button up
-                    // Right click - show context menu (not implemented in this basic version)
-                    // In a full implementation, you would show a context menu here
+                    // Right click - show main window for now (could be context menu later)
+                    Debug.WriteLine("System tray right click detected");
+                    ShowMainWindowRequested?.Invoke(this, EventArgs.Empty);
                     break;
             }
         }

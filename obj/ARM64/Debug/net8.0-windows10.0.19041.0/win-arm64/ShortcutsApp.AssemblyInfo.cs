@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShortcutsApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0677baf38de5677949e5cef14a3b63d8c3c90a0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f5d7b3e6ee70e411f5f3ef8f48143eefacba761")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShortcutsApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShortcutsApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

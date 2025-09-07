@@ -533,6 +533,13 @@ namespace ShortcutsApp
         private const int WM_HOTKEY = 0x0312;
         
         /// <summary>
+        /// Win32 constant for system tray icon messages.
+        /// When the system tray icon is clicked, Windows sends this message.
+        /// </summary>
+        private const int WM_USER = 0x0400;
+        private const int WM_TRAYICON = WM_USER + 1;
+        
+        /// <summary>
         /// Win32 API function to set a window procedure (message handler).
         /// This allows us to intercept and handle Windows messages.
         /// </summary>
@@ -665,6 +672,22 @@ namespace ShortcutsApp
                     if (hotkeyService != null)
                     {
                         hotkeyService.HandleHotkeyMessage(msg, wParam, lParam);
+                        return IntPtr.Zero; // Message handled
+                    }
+                }
+                
+                // Handle system tray icon messages
+                if (msg == WM_TRAYICON)
+                {
+                    System.Diagnostics.Debug.WriteLine($"WM_TRAYICON message received: wParam={wParam}, lParam={lParam}");
+                    
+                    // Get the system tray service from the app and forward the message
+                    var app = (App)Application.Current;
+                    var systemTrayService = app.GetService<SystemTrayService>();
+                    
+                    if (systemTrayService != null)
+                    {
+                        systemTrayService.HandleTrayIconMessage(msg, wParam, lParam);
                         return IntPtr.Zero; // Message handled
                     }
                 }
